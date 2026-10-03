@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Quem faz o quê?</title>
+  <desc id="desc">Lei 7.498/1986 + Decreto 94.406/1987. Técnico de Enfermagem: Participa da programação, Executa ações, exceto privativas, Assiste o enfermeiro, Sob orientação e supervisão. Privativo do Enfermeiro: Consulta de enfermagem, Prescrição da assistência, Cuidados diretos a graves, Maior complexidade técnica</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse"><path d="M 0 0 L 12 6 L 0 12 z" fill="context-stroke"/></marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0F172A" flood-opacity="0.08"/></filter>
+  </defs>
+  <rect width="1200" height="900" fill="#FFFFFF"/>
+  <rect x="54" y="54" width="8" height="116" rx="4" fill="#475569"/>
+  <text x="88" y="100" font-family="Inter, Arial, sans-serif" font-size="46" font-weight="850" fill="#0F172A">Quem faz o quê?</text>
+  <text x="88" y="142" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="500" fill="#475569">Lei 7.498/1986 + Decreto 94.406/1987</text>
+  <g font-family="Inter, Arial, sans-serif"><g>
+    <rect x="76" y="244" width="490" height="490" rx="24" fill="#F0FDFA" stroke="#0F9F95" stroke-width="3"/>
+    <rect x="98" y="262" width="69" height="42" rx="21" fill="#0F9F95"/><text x="132.5" y="290" text-anchor="middle" font-size="20" font-weight="800" fill="#FFFFFF">TEC</text>
+    <text x="185" y="298" font-size="28" font-weight="800" fill="#115E59">Técnico de Enfermagem</text>
+    <text x="106" y="348" text-anchor="start" font-size="21" font-weight="500" fill="#334155"><tspan x="106" dy="0">• Participa da programação</tspan><tspan x="106" dy="31">• Executa ações, exceto privativas</tspan><tspan x="106" dy="31">• Assiste o enfermeiro</tspan><tspan x="106" dy="31">• Sob orientação e supervisão</tspan></text>
+  </g><g>
+    <rect x="634" y="244" width="490" height="490" rx="24" fill="#F8FAFC" stroke="#475569" stroke-width="3"/>
+    <rect x="656" y="262" width="69" height="42" rx="21" fill="#475569"/><text x="690.5" y="290" text-anchor="middle" font-size="20" font-weight="800" fill="#FFFFFF">ENF</text>
+    <text x="743" y="298" font-size="28" font-weight="800" fill="#1E293B">Privativo do Enfermeiro</text>
+    <text x="664" y="348" text-anchor="start" font-size="21" font-weight="500" fill="#334155"><tspan x="664" dy="0">• Consulta de enfermagem</tspan><tspan x="664" dy="31">• Prescrição da assistência</tspan><tspan x="664" dy="31">• Cuidados diretos a graves</tspan><tspan x="664" dy="31">• Maior complexidade técnica</tspan></text>
+  </g><circle cx="600" cy="488" r="34" fill="#FFFFFF" stroke="#475569" stroke-width="3"/><text x="600" y="499" text-anchor="middle" font-size="28" font-weight="900" fill="#1E293B">×</text></g>
+  <rect x="70" y="816" width="1060" height="56" rx="18" fill="#F8FAFC" stroke="#CBD5E1"/><text x="600" y="851" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="600" fill="#475569">Em instituições e programas de saúde, o técnico atua sob orientação e supervisão do enfermeiro.</text>
+  <text x="1130" y="886" text-anchor="end" font-family="Inter, Arial, sans-serif" font-size="15" fill="#94A3B8">ETH-ATR-001</text>
+</svg>

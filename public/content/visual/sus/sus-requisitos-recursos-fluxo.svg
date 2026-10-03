@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Recebimento de recursos</title>
+  <desc id="desc">Requisitos do art. 4º da Lei 8.142. Fundo de Saúde: Estrutura financeira. Conselho de Saúde: Composição paritária. Plano de Saúde: Planejamento formal. Relatório de Gestão: Prestação de contas. Contrapartida: Recursos no orçamento. Comissão de PCCS: Plano de carreira, cargos, e salários</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse"><path d="M 0 0 L 12 6 L 0 12 z" fill="context-stroke"/></marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0F172A" flood-opacity="0.08"/></filter>
+  </defs>
+  <rect width="1200" height="900" fill="#FFFFFF"/>
+  <rect x="54" y="54" width="8" height="116" rx="4" fill="#2563EB"/>
+  <text x="88" y="100" font-family="Inter, Arial, sans-serif" font-size="46" font-weight="850" fill="#0F172A">Recebimento de recursos</text>
+  <text x="88" y="142" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="500" fill="#475569">Requisitos do art. 4º da Lei 8.142</text>
+  <g font-family="Inter, Arial, sans-serif"><path d="M 485 490 C 462.5 490, 462.5 289, 440 289" fill="none" stroke="#2563EB" stroke-width="4" marker-end="url(#arrow)"/><g>
+    <rect x="60" y="212" width="360" height="154" rx="24" fill="#EFF6FF" stroke="#2563EB" stroke-width="3"/>
+    <rect x="82" y="230" width="54" height="42" rx="21" fill="#2563EB"/><text x="109" y="258" text-anchor="middle" font-size="20" font-weight="800" fill="#FFFFFF">1</text>
+    <text x="154" y="259" font-size="24" font-weight="800" fill="#1E3A8A">Fundo de Saúde</text>
+    <text x="90" y="298" text-anchor="start" font-size="18" font-weight="500" fill="#334155"><tspan x="90" dy="0">• Estrutura financeira</tspan></text>
+  </g><path d="M 485 490 C 462.5 490, 462.5 467, 440 467" fill="none" stroke="#16A34A" stroke-width="4" marker-end="url(#arrow)"/><g>
+    <rect x="60" y="390" width="360" height="154" rx="24" fill="#F0FDF4" stroke="#16A34A" stroke-width="3"/>
+    <rect x="82" y="408" width="54" height="42" rx="21" fill="#16A34A"/><text x="109" y="436" text-anchor="middle" font-size="20" font-weight="800" fill="#FFFFFF">2</text>
+    <text x="154" y="437" font-size="24" font-weight="800" fill="#166534">Conselho de Saúde</text>
+    <text x="90" y="476" text-anchor="start" font-size="18" font-weight="500" fill="#334155"><tspan x="90" dy="0">• Composição paritária</tspan></text>
+  </g><path d="M 485 490 C 462.5 490, 462.5 645, 440 645" fill="none" stroke="#7C3AED" stroke-width="4" marker-end="url(#arrow)"/><g>
+    <rect x="60" y="568" width="360" height="154" rx="24" fill="#F5F3FF" stroke="#7C3AED" stroke-width="3"/>
+    <rect x="82" y="586" width="54" height="42" rx="21" fill="#7C3AED"/><text x="109" y="614" text-anchor="middle" font-size="20" font-weight="800" fill="#FFFFFF">3</text>
+    <text x="154" y="615" font-size="24" font-weight="800" fill="#5B21B6">Plano de Saúde</text>
+    <text x="90" y="654" text-anchor="start" font-size="18" font-weight="500" fill="#334155"><tspan x="90" dy="0">• Planejamento formal</tspan></text>
+  </g><path d="M 715 490 C 737.5 490, 737.5 289, 760 289" fill="none" stroke="#D97706" stroke-width="4" marker-end="url(#arrow)"/><g>
+    <rect x="780" y="212" width="360" height="154" rx="24" fill="#FFFBEB" stroke="#D97706" stroke-width="3"/>
+    <rect x="802" y="230" width="54" height="42" rx="21" fill="#D97706"/><text x="829" y="258" text-anchor="middle" font-size="20" font-weight="800" fill="#FFFFFF">4</text>
+    <text x="874" y="259" font-size="24" font-weight="800" fill="#92400E">Relatório de Gestão</text>
+    <text x="810" y="298" text-anchor="start" font-size="18" font-weight="500" fill="#334155"><tspan x="810" dy="0">• Prestação de contas</tspan></text>
+  </g><path d="M 715 490 C 737.5 490, 737.5 467, 760 467" fill="none" stroke="#EA580C" stroke-width="4" marker-end="url(#arrow)"/><g>
+    <rect x="780" y="390" width="360" height="154" rx="24" fill="#FFF7ED" stroke="#EA580C" stroke-width="3"/>
+    <rect x="802" y="408" width="54" height="42" rx="21" fill="#EA580C"/><text x="829" y="436" text-anchor="middle" font-size="20" font-weight="800" fill="#FFFFFF">5</text>
+    <text x="874" y="437" font-size="24" font-weight="800" fill="#9A3412">Contrapartida</text>
+    <text x="810" y="476" text-anchor="start" font-size="18" font-weight="500" fill="#334155"><tspan x="810" dy="0">• Recursos no orçamento</tspan></text>
+  </g><path d="M 715 490 C 737.5 490, 737.5 645, 760 645" fill="none" stroke="#475569" stroke-width="4" marker-end="url(#arrow)"/><g>
+    <rect x="780" y="568" width="360" height="154" rx="24" fill="#F8FAFC" stroke="#475569" stroke-width="3"/>
+    <rect x="802" y="586" width="54" height="42" rx="21" fill="#475569"/><text x="829" y="614" text-anchor="middle" font-size="20" font-weight="800" fill="#FFFFFF">6</text>
+    <text x="874" y="615" font-size="24" font-weight="800" fill="#1E293B">Comissão de PCCS</text>
+    <text x="810" y="654" text-anchor="start" font-size="18" font-weight="500" fill="#334155"><tspan x="810" dy="0">• Plano de carreira, cargos</tspan><tspan x="810" dy="25">• e salários</tspan></text>
+  </g><rect x="485" y="424" width="230" height="132" rx="44" fill="#2563EB"/>
+      <text x="600" y="502" text-anchor="middle" font-size="34" font-weight="900" fill="#FFFFFF">RECURSOS</text></g>
+  <rect x="70" y="816" width="1060" height="56" rx="18" fill="#F8FAFC" stroke="#CBD5E1"/><text x="600" y="851" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="600" fill="#475569">Mapa de revisão legal; consulte a redação integral da Lei 8.142/1990.</text>
+  <text x="1130" y="886" text-anchor="end" font-family="Inter, Arial, sans-serif" font-size="15" fill="#94A3B8">SUS-PAR-002</text>
+</svg>

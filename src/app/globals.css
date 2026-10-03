@@ -1,0 +1,170 @@
+@import "tailwindcss";
+
+/*
+ * Identidade: a mesa de estudo de quem vai fazer prova — papel, fichário,
+ * marca-texto e cartões de revisão. Nada de hospital frio, nada de SaaS
+ * genérico.
+ *
+ *   ink       azul-tinta de caneta          texto, autoridade
+ *   paper     papel levemente amarelado     fundo do app
+ *   card      branco                        cartões
+ *   hl        marca-texto amarelo           grifo, destaque (NUNCA botão de compra)
+ *   brand     azul-petróleo de fichário     ação principal do app
+ *   ok / bad  verde / vermelho              acerto / erro de questão
+ *   buy       verde de conversão            SÓ compra (página de vendas)
+ */
+@theme {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+
+  --color-ink: #1b2a3a;
+  --color-body: #4b5a69;
+  --color-muted: #7a8794;
+  --color-paper: #f7f4ec;
+  --color-paper-deep: #efe9da;
+  --color-line: #e3dccb;
+  --color-card: #ffffff;
+  --color-brand: #0f5c6e;
+  --color-brand-deep: #0a4352;
+  --color-brand-soft: #e2f0f2;
+  --color-hl: #ffe45c;
+  --color-hl-soft: #fff5bf;
+  --color-ok: #138a52;
+  --color-ok-soft: #e3f5ea;
+  --color-bad: #c8364a;
+  --color-bad-soft: #fbe6e9;
+  --color-buy: #06a742;
+
+  --radius-card: 1.25rem;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+button, a, input, summary { -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; }
+
+:focus-visible {
+  outline: 3px solid var(--color-brand);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* marca-texto: o grifo de quem estuda */
+.mark {
+  background: linear-gradient(transparent 52%, var(--color-hl) 52%, var(--color-hl) 92%, transparent 92%);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: 0 0.08em;
+}
+
+/* ─────────────── peças do app ─────────────── */
+.card {
+  background: var(--color-card);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  box-shadow: 0 1px 0 rgba(27, 42, 58, 0.04), 0 10px 24px -18px rgba(27, 42, 58, 0.35);
+}
+
+.btn {
+  display: inline-flex;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.9rem;
+  padding: 0.75rem 1.25rem;
+  font-weight: 800;
+  transition: transform 0.15s ease, filter 0.15s ease, background 0.15s ease;
+}
+.btn:active {
+  transform: scale(0.98);
+}
+.btn-primary {
+  background: var(--color-brand);
+  color: #fff;
+  box-shadow: 0 10px 20px -12px rgba(15, 92, 110, 0.8);
+}
+.btn-primary:hover {
+  filter: brightness(1.08);
+}
+.btn-secondary {
+  background: #fff;
+  color: var(--color-ink);
+  border: 1.5px solid var(--color-line);
+}
+.btn-secondary:hover {
+  border-color: var(--color-brand);
+}
+.btn-ghost {
+  color: var(--color-body);
+}
+.btn-ghost:hover {
+  background: var(--color-paper-deep);
+}
+
+.review-now-card {
+  position: relative;
+  background-color: #fffdf6;
+  box-shadow: 0 18px 50px -34px rgba(15, 92, 110, 0.75);
+}
+.review-now-card::after {
+  content: "R";
+  position: absolute;
+  right: -0.5rem;
+  bottom: -2.8rem;
+  color: rgba(15, 92, 110, 0.08);
+  font-size: 11rem;
+  font-weight: 900;
+  line-height: 1;
+  transform: rotate(-8deg);
+}
+
+.input {
+  width: 100%;
+  min-height: 3rem;
+  border-radius: 0.8rem;
+  border: 1.5px solid var(--color-line);
+  background: #fff;
+  padding: 0.7rem 0.9rem;
+  font-size: 1rem;
+  color: var(--color-ink);
+}
+.input:focus {
+  outline: none;
+  border-color: var(--color-brand);
+  box-shadow: 0 0 0 3px rgba(15, 92, 110, 0.15);
+}
+
+/* folha pautada (fundo de telas de auth e do "Revisar agora") */
+.ruled {
+  background-color: #fffdf6;
+  background-image:
+    linear-gradient(90deg, transparent 2.4rem, rgba(200, 54, 74, 0.25) 2.4rem, rgba(200, 54, 74, 0.25) calc(2.4rem + 1px), transparent calc(2.4rem + 1px)),
+    repeating-linear-gradient(180deg, transparent 0 1.85rem, rgba(15, 92, 110, 0.1) 1.85rem calc(1.85rem + 1px));
+}
+
+/* tons semânticos das áreas (mapa, cards) */
+.tone-blue { --tone: #2563a8; --tone-soft: #e5eef8; }
+.tone-teal { --tone: #0f7c80; --tone-soft: #e0f2f1; }
+.tone-green { --tone: #2f855a; --tone-soft: #e5f4ea; }
+.tone-amber { --tone: #b7791f; --tone-soft: #fdf2dc; }
+.tone-rose { --tone: #c53060; --tone-soft: #fbe7ee; }
+.tone-violet { --tone: #6b46c1; --tone-soft: #efe9fb; }
+.tone-orange { --tone: #c05621; --tone-soft: #fcecdf; }
+.tone-slate { --tone: #4a5568; --tone-soft: #edf0f4; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Regra de Näegele — exemplo</title>
+  <desc id="desc">Como 27/01 chega a 03/11. 1 · Dado: DUM = 27/01. 2 · Somar 7 dias: 27 + 7 = 34. 3 · Ajustar o mês: 34 − 31 = 3, 1 + 9 + 1 = 11. 4 · Resultado: DPP = 03/11</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse"><path d="M 0 0 L 12 6 L 0 12 z" fill="context-stroke"/></marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0F172A" flood-opacity="0.08"/></filter>
+  </defs>
+  <rect width="1200" height="900" fill="#FFFFFF"/>
+  <rect x="54" y="54" width="8" height="116" rx="4" fill="#7C3AED"/>
+  <text x="88" y="100" font-family="Inter, Arial, sans-serif" font-size="46" font-weight="850" fill="#0F172A">Regra de Näegele — exemplo</text>
+  <text x="88" y="142" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="500" fill="#475569">Como 27/01 chega a 03/11</text>
+  <g font-family="Inter, Arial, sans-serif"><g>
+    <rect x="154" y="220" width="892" height="122" rx="24" fill="#F5F3FF" stroke="#7C3AED" stroke-width="3"/>
+    
+    <text x="180" y="267" font-size="24" font-weight="800" fill="#5B21B6">1 · Dado</text>
+    <text x="184" y="306" text-anchor="start" font-size="18" font-weight="500" fill="#334155"><tspan x="184" dy="0">• DUM = 27/01</tspan></text>
+  </g><path d="M 600 344 C 600 344, 600 357, 600 357" fill="none" stroke="#7C3AED" stroke-width="4" marker-end="url(#arrow)"/><g>
+    <rect x="154" y="360" width="892" height="122" rx="24" fill="#EFF6FF" stroke="#2563EB" stroke-width="3"/>
+    
+    <text x="180" y="407" font-size="24" font-weight="800" fill="#1E3A8A">2 · Somar 7 dias</text>
+    <text x="184" y="446" text-anchor="start" font-size="18" font-weight="500" fill="#334155"><tspan x="184" dy="0">• 27 + 7 = 34</tspan></text>
+  </g><path d="M 600 484 C 600 484, 600 497, 600 497" fill="none" stroke="#7C3AED" stroke-width="4" marker-end="url(#arrow)"/><g>
+    <rect x="154" y="500" width="892" height="122" rx="24" fill="#FFFBEB" stroke="#D97706" stroke-width="3"/>
+    
+    <text x="180" y="547" font-size="24" font-weight="800" fill="#92400E">3 · Ajustar o mês</text>
+    <text x="184" y="586" text-anchor="start" font-size="18" font-weight="500" fill="#334155"><tspan x="184" dy="0">• 34 − 31 = 3</tspan><tspan x="184" dy="25">• 1 + 9 + 1 = 11</tspan></text>
+  </g><path d="M 600 624 C 600 624, 600 637, 600 637" fill="none" stroke="#7C3AED" stroke-width="4" marker-end="url(#arrow)"/><g>
+    <rect x="154" y="640" width="892" height="122" rx="24" fill="#F0FDF4" stroke="#16A34A" stroke-width="3"/>
+    
+    <text x="180" y="687" font-size="24" font-weight="800" fill="#166534">4 · Resultado</text>
+    <text x="184" y="726" text-anchor="start" font-size="18" font-weight="500" fill="#334155"><tspan x="184" dy="0">• DPP = 03/11</tspan></text>
+  </g></g>
+  <rect x="70" y="816" width="1060" height="56" rx="18" fill="#F8FAFC" stroke="#CBD5E1"/><text x="600" y="851" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="600" fill="#475569">Exemplo do Caderno de Atenção Básica nº 32.</text>
+  <text x="1130" y="886" text-anchor="end" font-family="Inter, Arial, sans-serif" font-size="15" fill="#94A3B8">WOM-DPP-002</text>
+</svg>

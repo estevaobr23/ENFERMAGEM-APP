@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Regra de três — exercício</title>
+  <desc id="desc">Quanto aspirar?. 1 · Tenho: 500 mg — 5 mL. 2 · Quero: 150 mg — x mL. 3 · Multiplico e divido: x = 150 × 5 ÷ 500. 4 · Resultado: x = 1,5 mL</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse"><path d="M 0 0 L 12 6 L 0 12 z" fill="context-stroke"/></marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0F172A" flood-opacity="0.08"/></filter>
+  </defs>
+  <rect width="1200" height="900" fill="#FFFFFF"/>
+  <rect x="54" y="54" width="8" height="116" rx="4" fill="#EA580C"/>
+  <text x="88" y="100" font-family="Inter, Arial, sans-serif" font-size="46" font-weight="850" fill="#0F172A">Regra de três — exercício</text>
+  <text x="88" y="142" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="500" fill="#475569">Quanto aspirar?</text>
+  <g font-family="Inter, Arial, sans-serif"><g>
+    <rect x="154" y="220" width="892" height="122" rx="24" fill="#FFF7ED" stroke="#EA580C" stroke-width="3"/>
+    
+    <text x="180" y="267" font-size="24" font-weight="800" fill="#9A3412">1 · Tenho</text>
+    <text x="184" y="306" text-anchor="start" font-size="18" font-weight="500" fill="#334155"><tspan x="184" dy="0">• 500 mg — 5 mL</tspan></text>
+  </g><path d="M 600 344 C 600 344, 600 357, 600 357" fill="none" stroke="#EA580C" stroke-width="4" marker-end="url(#arrow)"/><g>
+    <rect x="154" y="360" width="892" height="122" rx="24" fill="#EFF6FF" stroke="#2563EB" stroke-width="3"/>
+    
+    <text x="180" y="407" font-size="24" font-weight="800" fill="#1E3A8A">2 · Quero</text>
+    <text x="184" y="446" text-anchor="start" font-size="18" font-weight="500" fill="#334155"><tspan x="184" dy="0">• 150 mg — x mL</tspan></text>
+  </g><path d="M 600 484 C 600 484, 600 497, 600 497" fill="none" stroke="#EA580C" stroke-width="4" marker-end="url(#arrow)"/><g>
+    <rect x="154" y="500" width="892" height="122" rx="24" fill="#F5F3FF" stroke="#7C3AED" stroke-width="3"/>
+    
+    <text x="180" y="547" font-size="24" font-weight="800" fill="#5B21B6">3 · Multiplico e divido</text>
+    <text x="184" y="586" text-anchor="start" font-size="18" font-weight="500" fill="#334155"><tspan x="184" dy="0">• x = 150 × 5 ÷ 500</tspan></text>
+  </g><path d="M 600 624 C 600 624, 600 637, 600 637" fill="none" stroke="#EA580C" stroke-width="4" marker-end="url(#arrow)"/><g>
+    <rect x="154" y="640" width="892" height="122" rx="24" fill="#F0FDF4" stroke="#16A34A" stroke-width="3"/>
+    
+    <text x="180" y="687" font-size="24" font-weight="800" fill="#166534">4 · Resultado</text>
+    <text x="184" y="726" text-anchor="start" font-size="18" font-weight="500" fill="#334155"><tspan x="184" dy="0">• x = 1,5 mL</tspan></text>
+  </g></g>
+  <rect x="70" y="816" width="1060" height="56" rx="18" fill="#F8FAFC" stroke="#CBD5E1"/><text x="600" y="851" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="600" fill="#475569">Valores fictícios de estudo — não aplicar diretamente a um paciente.</text>
+  <text x="1130" y="886" text-anchor="end" font-family="Inter, Arial, sans-serif" font-size="15" fill="#94A3B8">CAL-REG-002</text>
+</svg>

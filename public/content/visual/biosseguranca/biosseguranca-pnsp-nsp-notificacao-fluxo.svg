@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Segurança do paciente</title>
+  <desc id="desc">Do conceito à notificação. Conceitos: Incidente: poderia causar ou causou dano, Evento adverso: incidente com dano, Segurança: risco no mínimo aceitável. Estrutura: Direção constitui o NSP, NSP elabora o PSP, Implanta protocolos. Notificação: Mensal: até o 15º dia útil, Óbito: em até 72 h</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse"><path d="M 0 0 L 12 6 L 0 12 z" fill="context-stroke"/></marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0F172A" flood-opacity="0.08"/></filter>
+  </defs>
+  <rect width="1200" height="900" fill="#FFFFFF"/>
+  <rect x="54" y="54" width="8" height="116" rx="4" fill="#16A34A"/>
+  <text x="88" y="100" font-family="Inter, Arial, sans-serif" font-size="46" font-weight="850" fill="#0F172A">Segurança do paciente</text>
+  <text x="88" y="142" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="500" fill="#475569">Do conceito à notificação</text>
+  <g font-family="Inter, Arial, sans-serif"><g>
+    <rect x="58" y="255" width="338" height="470" rx="24" fill="#F0FDF4" stroke="#16A34A" stroke-width="3"/>
+    <rect x="80" y="273" width="54" height="42" rx="21" fill="#16A34A"/><text x="107" y="301" text-anchor="middle" font-size="20" font-weight="800" fill="#FFFFFF">1</text>
+    <text x="152" y="309" font-size="28" font-weight="800" fill="#166534">Conceitos</text>
+    <text x="88" y="359" text-anchor="start" font-size="21" font-weight="500" fill="#334155"><tspan x="88" dy="0">• Incidente: poderia causar ou causou dano</tspan><tspan x="88" dy="31">• Evento adverso: incidente com dano</tspan><tspan x="88" dy="31">• Segurança: risco no mínimo aceitável</tspan></text>
+  </g><path d="M 401 490 C 412 490, 412 490, 423 490" fill="none" stroke="#16A34A" stroke-width="4" marker-end="url(#arrow)"/><g>
+    <rect x="430" y="255" width="338" height="470" rx="24" fill="#EFF6FF" stroke="#2563EB" stroke-width="3"/>
+    <rect x="452" y="273" width="54" height="42" rx="21" fill="#2563EB"/><text x="479" y="301" text-anchor="middle" font-size="20" font-weight="800" fill="#FFFFFF">2</text>
+    <text x="524" y="309" font-size="28" font-weight="800" fill="#1E3A8A">Estrutura</text>
+    <text x="460" y="359" text-anchor="start" font-size="21" font-weight="500" fill="#334155"><tspan x="460" dy="0">• Direção constitui o NSP</tspan><tspan x="460" dy="31">• NSP elabora o PSP</tspan><tspan x="460" dy="31">• Implanta protocolos</tspan></text>
+  </g><path d="M 773 490 C 784 490, 784 490, 795 490" fill="none" stroke="#16A34A" stroke-width="4" marker-end="url(#arrow)"/><g>
+    <rect x="802" y="255" width="338" height="470" rx="24" fill="#FFF1F2" stroke="#E11D48" stroke-width="3"/>
+    <rect x="824" y="273" width="54" height="42" rx="21" fill="#E11D48"/><text x="851" y="301" text-anchor="middle" font-size="20" font-weight="800" fill="#FFFFFF">3</text>
+    <text x="896" y="309" font-size="28" font-weight="800" fill="#9F1239">Notificação</text>
+    <text x="832" y="359" text-anchor="start" font-size="21" font-weight="500" fill="#334155"><tspan x="832" dy="0">• Mensal: até o 15º dia útil</tspan><tspan x="832" dy="31">• Óbito: em até 72 h</tspan></text>
+  </g></g>
+  <rect x="70" y="816" width="1060" height="56" rx="18" fill="#F8FAFC" stroke="#CBD5E1"/><text x="600" y="851" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="600" fill="#475569">Material educacional de revisão; não é ferramenta de decisão clínica.</text>
+  <text x="1130" y="886" text-anchor="end" font-family="Inter, Arial, sans-serif" font-size="15" fill="#94A3B8">BIO-PNSP-001</text>
+</svg>
