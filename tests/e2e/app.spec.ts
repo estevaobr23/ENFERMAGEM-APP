@@ -16,11 +16,11 @@ async function login(page: Page, email: string) {
 test("landing mobile, CTAs e ausência de overflow", async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 800 });
   await page.goto("/?utm_source=e2e&utm_campaign=concurso");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("áreas do concurso");
-  await expect(page.locator("section")).toHaveCount(9);
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("não precisa");
+  await expect(page.locator("section")).toHaveCount(12);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  await page.getByRole("link", { name: /Quero revisar com o aplicativo/ }).click();
-  await expect(page).toHaveURL(/#comprar$/);
+  await page.getByRole("link", { name: /QUERO REVISAR COM MAIS CLAREZA/ }).first().click();
+  await expect(page).toHaveURL(/#planos$/);
   // plano básico abre o downsell; os links de checkout levam as UTMs da entrada
   await page.getByRole("button", { name: "Quero só o Básico" }).click();
   await expect(page.getByRole("heading", { name: /Leve o Plano Completo/ })).toBeVisible();
