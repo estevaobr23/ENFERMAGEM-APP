@@ -34,6 +34,69 @@ function ResendConfirmation({ email }: { email: string }) {
   );
 }
 
+/**
+ * Cadastro em 2 passos: e-mail primeiro (passo 1), depois nome + senha
+ * (passo 2, com aviso de que essa é a senha usada para entrar depois).
+ * O <form> real só existe no passo 2 — ele envia e-mail+nome+senha juntos
+ * numa Server Action só, igual antes; o passo 1 é puramente visual.
+ */
+function SignupSteps({ state, formAction, pending }: {
+  state: AuthState;
+  formAction: (formData: FormData) => void;
+  pending: boolean;
+}) {
+  const [step, setStep] = useState<1 | 2>(1);
+  const [email, setEmail] = useState(state?.email ?? "");
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  if (step === 1) {
+    return (
+      <form
+        className="mt-6 space-y-4"
+        onSubmit={(e) => { e.preventDefault(); if (EMAIL_RE.test(email)) setStep(2); }}
+      >
+        <label className="block text-sm font-bold">E-mail
+          <input
+            className="input mt-1.5"
+            type="email"
+            autoComplete="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoFocus
+          />
+        </label>
+        <button className="btn btn-primary w-full">Continuar</button>
+        <p className="text-center text-sm text-body">Já tem conta? <Link className="font-bold text-brand" href="/login">Entrar</Link></p>
+      </form>
+    );
+  }
+
+  return (
+    <form action={formAction} className="mt-6 space-y-4">
+      <input type="hidden" name="email" value={email} />
+      <div className="flex items-center gap-2 rounded-xl bg-paper-deep px-3 py-2 text-sm">
+        <span className="min-w-0 flex-1 truncate font-semibold">{email}</span>
+        <button type="button" onClick={() => setStep(1)} className="shrink-0 font-bold text-brand underline underline-offset-2">Trocar</button>
+      </div>
+      <label className="block text-sm font-bold">Seu nome
+        <input className="input mt-1.5" name="name" autoComplete="name" required maxLength={120} autoFocus />
+      </label>
+      <div>
+        <label className="block text-sm font-bold">Crie uma senha
+          <input className="input mt-1.5" name="password" type="password" minLength={8} autoComplete="new-password" required />
+        </label>
+        <p className="mt-1.5 flex items-start gap-1.5 text-xs leading-relaxed text-brand">
+          <span>🔑</span>
+          <span>Essa é a senha que você vai usar para entrar no aplicativo depois — guarde em um lugar seguro.</span>
+        </p>
+      </div>
+      {state?.error && <p className="rounded-xl bg-bad-soft p-3 text-sm font-semibold text-bad" role="alert">{state.error}</p>}
+      <button className="btn btn-primary w-full" disabled={pending}>{pending ? "Aguarde…" : "Criar minha conta"}</button>
+    </form>
+  );
+}
+
 export function AuthForm({ mode, action, redirectTo = "", initialEmail = "" }: {
   mode: "login" | "signup" | "reset" | "password";
   action: AuthAction;
@@ -60,14 +123,11 @@ export function AuthForm({ mode, action, redirectTo = "", initialEmail = "" }: {
     );
   }
 
+  if (isSignup) return <SignupSteps state={state} formAction={formAction} pending={pending} />;
+
   return (
     <form action={formAction} className="mt-6 space-y-4">
       {redirectTo && <input type="hidden" name="redirect" value={redirectTo} />}
-      {isSignup && (
-        <label className="block text-sm font-bold">Seu nome
-          <input className="input mt-1.5" name="name" autoComplete="name" required maxLength={120} />
-        </label>
-      )}
       {mode !== "password" && (
         <label className="block text-sm font-bold">E-mail
           <input className="input mt-1.5" name="email" type="email" defaultValue={state?.email ?? initialEmail} autoComplete="email" required />
@@ -75,7 +135,7 @@ export function AuthForm({ mode, action, redirectTo = "", initialEmail = "" }: {
       )}
       {!isReset && mode !== "password" && (
         <label className="block text-sm font-bold">Senha
-          <input className="input mt-1.5" name="password" type="password" minLength={8} autoComplete={isSignup ? "new-password" : "current-password"} required />
+          <input className="input mt-1.5" name="password" type="password" minLength={8} autoComplete="current-password" required />
         </label>
       )}
       {mode === "password" && <>
@@ -93,9 +153,8 @@ export function AuthForm({ mode, action, redirectTo = "", initialEmail = "" }: {
           <ResendConfirmation email={state.email ?? ""} />
         </div>
       )}
-      <button className="btn btn-primary w-full" disabled={pending}>{pending ? "Aguarde…" : isLogin ? "Entrar no aplicativo" : isSignup ? "Criar minha conta" : isReset ? "Enviar link" : "Salvar nova senha"}</button>
+      <button className="btn btn-primary w-full" disabled={pending}>{pending ? "Aguarde…" : isLogin ? "Entrar no aplicativo" : isReset ? "Enviar link" : "Salvar nova senha"}</button>
       {isLogin && <div className="flex items-center justify-between gap-3 text-sm"><Link className="font-semibold text-brand" href="/recuperar-senha">Esqueci minha senha</Link><Link className="font-semibold text-brand" href="/cadastro">Criar conta</Link></div>}
-      {isSignup && <p className="text-center text-sm text-body">Já tem conta? <Link className="font-bold text-brand" href="/login">Entrar</Link></p>}
     </form>
   );
 }
