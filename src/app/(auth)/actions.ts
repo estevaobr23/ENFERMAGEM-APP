@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/core/supabase/server";
 import { safeNext } from "@/core/auth/guard";
 
-export type AuthState = { error?: string; info?: string; email?: string } | undefined;
+export type AuthState = { error?: string; info?: string; email?: string; sent?: boolean; unconfirmed?: boolean } | undefined;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 async function siteOrigin() {
@@ -27,7 +27,7 @@ export async function signIn(_: AuthState, formData: FormData): Promise<AuthStat
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) {
-    if (error.code === "email_not_confirmed") return { error: "Confirme seu e-mail pelo link enviado antes de entrar.", email };
+    if (error.code === "email_not_confirmed") return { error: "Você ainda não confirmou seu e-mail.", email, unconfirmed: true };
     return { error: "E-mail ou senha incorretos.", email };
   }
   redirect(safeNext(String(formData.get("redirect") ?? "")));
@@ -52,7 +52,15 @@ export async function signUp(_: AuthState, formData: FormData): Promise<AuthStat
     if (error.status === 429) return { error: "Muitas tentativas. Aguarde alguns minutos.", email };
     return { error: "Não foi possível criar a conta agora. Tente novamente.", email };
   }
-  return { info: `Enviamos um link de confirmação para ${email}. Confirme o e-mail para vincular a sua compra.`, email };
+  return { info: `Enviamos um link de confirmação para ${email}.`, email, sent: true };
+}
+
+export async function resendConfirmation(_: AuthState, formData: FormData): Promise<AuthState> {
+  const email = readEmail(formData);
+  if (!EMAIL.test(email)) return { error: "Informe um e-mail válido.", email };
+  const supabase = await createClient();
+  await supabase.auth.resend({ type: "signup", email, options: { emailRedirectTo: `${await siteOrigin()}/auth/callback?next=/app` } });
+  return { info: `Reenviamos o link de confirmação para ${email}.`, email, sent: true };
 }
 
 export async function requestPasswordReset(_: AuthState, formData: FormData): Promise<AuthState> {
@@ -60,7 +68,7 @@ export async function requestPasswordReset(_: AuthState, formData: FormData): Pr
   if (!EMAIL.test(email)) return { error: "Informe um e-mail válido.", email };
   const supabase = await createClient();
   await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${await siteOrigin()}/auth/callback?next=/nova-senha` });
-  return { info: "Se existir uma conta com este e-mail, você receberá um link para criar uma nova senha.", email };
+  return { info: "Se existir uma conta com este e-mail, você receberá um link para criar uma nova senha.", email, sent: true };
 }
 
 export async function updatePassword(_: AuthState, formData: FormData): Promise<AuthState> {

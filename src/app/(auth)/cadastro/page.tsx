@@ -9,7 +9,7 @@ export default async function SignupPage({ searchParams }: { searchParams: Promi
   return <>
     <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-brand">Depois da compra</p>
     <h1 className="mt-2 text-2xl font-extrabold tracking-tight">Crie seu acesso</h1>
-    <p className="mt-2 text-sm leading-relaxed text-body">Use exatamente o mesmo e-mail da compra. A confirmação desse e-mail protege o seu acesso.</p>
+    <p className="mt-2 text-sm leading-relaxed text-body">Use exatamente o mesmo e-mail da compra. Depois de criar a conta, você recebe um e-mail de confirmação — <b className="text-ink">ele costuma cair no spam</b>, então vale a pena já deixar essa pasta aberta.</p>
     <AuthForm mode="signup" action={signUp} initialEmail={params.email ?? ""} />
   </>;
 }
