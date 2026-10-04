@@ -110,7 +110,7 @@ function TopicPage() {
       <p className="tp-meta"><span>☰ {topic.sections.length} seções</span><span>◎ {QUESTIONS.length} questões no teste</span></p>
       <div className="tp-steps"><span className="on">1 Conteúdo</span><span>2 Resumo</span><span>3 Quiz</span></div>
       <div className="tp-map">
-        <p className="tp-map-label">MAPA VISUAL DO TEMA</p>
+        <p className="tp-map-label">MAPA MENTAL DO TEMA</p>
         <div className="tp-center">{MAP.center}</div>
         <div className="tp-blocks">
           {MAP.blocks.map((b) => (
@@ -131,7 +131,7 @@ function TopicPage() {
 
 export function SceneTopic({ width, still = false }: { width?: string; still?: boolean }) {
   return (
-    <Device width={width} label={`Tema ${topic.title} aberto no aplicativo: mapa visual e pontos-chave`}>
+    <Device width={width} label={`Tema ${topic.title} aberto no aplicativo: mapa mental e pontos-chave`}>
       <div className={`ui ui-app ${still ? "still" : ""}`}>
         <div className="tp-scroll">
           <AppBar />
@@ -248,5 +248,22 @@ export function ExplodeFila() {
         <p className="text-[11px] font-semibold leading-snug">O tema volta para a sua fila sozinho</p>
       </div>
     </div>
+  );
+}
+
+// ─────────────── CENA D — a tela Matérias rolando até a última área — ciclo 14s ───────────────
+// Print real da página inteira (conta demo), com o topo e a barra inferior fixos.
+
+export function SceneMaterias({ width }: { width?: string }) {
+  return (
+    <Device width={width} label="Tela Matérias do aplicativo rolando e mostrando as 8 áreas com o progresso de cada uma">
+      <div className="mt-wrap">
+        <div className="mt-scroll">
+          <Image src="/landing/app/cats-full.webp" alt="" width={720} height={3689} unoptimized sizes="15rem" />
+        </div>
+        <Image src="/landing/app/cats-head.webp" alt="" width={720} height={111} unoptimized className="mt-head" sizes="15rem" />
+        <Image src="/landing/app/cats-nav.webp" alt="" width={720} height={124} unoptimized className="mt-nav" sizes="15rem" />
+      </div>
+    </Device>
   );
 }

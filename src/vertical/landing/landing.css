@@ -22,8 +22,8 @@
   --lp-auth-ink: #06262f;
   --lp-struct: #5fb3bb;
   --lp-struct-deep: #2f7e87;
-  --lp-hl: #d9503a;
-  --lp-hl-deep: #b33a24;
+  --lp-hl: #138496;
+  --lp-hl-deep: #0b6475;
   --lp-alert: #f6d55c;
   --lp-alert-deep: #e3b42b;
   --lp-warm: #f4eee2;
@@ -69,7 +69,7 @@
 .surf-warm::before { mix-blend-mode: multiply; opacity: 0.1; }
 .surf-warm::after {
   background-image:
-    linear-gradient(90deg, transparent 0 1.4rem, rgba(217, 80, 58, 0.16) 1.4rem calc(1.4rem + 1px), transparent calc(1.4rem + 1px)),
+    linear-gradient(90deg, transparent 0 1.4rem, rgba(19, 132, 150, 0.16) 1.4rem calc(1.4rem + 1px), transparent calc(1.4rem + 1px)),
     repeating-linear-gradient(180deg, transparent 0 31px, rgba(47, 126, 135, 0.11) 31px 32px);
 }
 
@@ -131,14 +131,14 @@
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  min-height: 17rem;
+  min-height: 19rem;
   margin: 1.25rem -0.5rem 0;
-  padding: 1.5rem 0 1.25rem;
+  padding: 1.75rem 0 3.25rem;
   overflow: hidden;
   border-radius: 1.5rem;
   background: radial-gradient(circle at 50% 50%, rgba(95, 179, 187, 0.22), transparent 65%), linear-gradient(180deg, #f3fafb 0%, #fff 100%);
 }
-.plan-complete-visual .dv + .dv { margin-left: -1.75rem; margin-bottom: -2.25rem; }
+.plan-complete-visual .dv + .dv { margin-left: -1.75rem; transform: translateY(1.5rem); }
 
 /* ───────────────────────── entrada com a rolagem (CSS scroll-driven) ───────────────────────── */
 @supports (animation-timeline: view()) {
@@ -200,6 +200,19 @@
 .dv-home { position: absolute; z-index: 55; bottom: 1.1%; left: 50%; width: 34%; height: 0.7%; transform: translateX(-50%); border-radius: 99px; background: rgba(0, 0, 0, 0.55); }
 .dv-glare { position: absolute; z-index: 58; inset: 0; pointer-events: none; background: linear-gradient(118deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.04) 22%, transparent 34%); }
 .dv-content { position: absolute; inset: 0; }
+.dv-screen { background: #fbf9f4; }
+/* print real começa abaixo da barra de status, como no celular */
+.dv-print { position: absolute; inset: 5.8% 0 0; overflow: hidden; background: #f6f2ea; }
+
+/* ──────── CENA D — tela Matérias rolando até a última área — ciclo 14s ────────
+   página inteira 390×1998 px; área visível = 844 × 94,2% = 795 px
+   → deslocamento = 1 − 795/1998 = 60,2% da altura da imagem */
+.mt-wrap { position: absolute; inset: 5.8% 0 0; overflow: hidden; background: #f6f2ea; }
+.mt-scroll { position: absolute; inset: 0 0 auto; animation: mt-scroll 14s ease-in-out infinite; }
+.mt-scroll img, .mt-head, .mt-nav { display: block; width: 100%; height: auto; }
+.mt-head { position: absolute; z-index: 2; top: 0; left: 0; }
+.mt-nav { position: absolute; z-index: 2; bottom: 0; left: 0; }
+@keyframes mt-scroll { 0%, 10% { transform: translateY(0); } 55%, 68% { transform: translateY(-60.2%); } 94%, 100% { transform: translateY(0); } }
 
 /* vidro flutuante */
 .glass { position: absolute; z-index: 70; border: 1px solid rgba(255, 255, 255, 0.65); background: rgba(255, 255, 255, 0.86); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); box-shadow: 0 18px 40px rgba(6, 38, 47, 0.26); border-radius: 1rem; color: var(--lp-ink); }
@@ -320,7 +333,7 @@
 .tp-scroll .ap-bar { position: relative; top: 0; }
 @keyframes tp-scroll { 0%, 12% { transform: translateY(0); } 42%, 58% { transform: translateY(-40%); } 88%, 100% { transform: translateY(0); } }
 .tp-crumbs { margin: 4cqw 5% 0; font: 600 2.6cqw/1 var(--font-sans); color: #6b7c81; }
-.tp-crumbs b { color: #c0582f; }
+.tp-crumbs b { color: #0f7487; }
 .tp-title { margin: 2.4cqw 5% 0; font: 800 6cqw/1.08 var(--font-sans); letter-spacing: -0.035em; }
 .tp-desc { margin: 2cqw 5% 0; font: 400 3cqw/1.4 var(--font-sans); color: #4f6168; }
 .tp-meta { display: flex; gap: 3cqw; margin: 2.6cqw 5% 0; font: 600 2.6cqw/1 var(--font-sans); color: #4f6168; }
@@ -396,12 +409,12 @@
 .rq-item b { display: block; margin-top: 0.8cqw; font: 800 3.3cqw/1.2 var(--font-sans); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rq-item small { display: block; margin-top: 0.8cqw; font: 500 2.5cqw/1 var(--font-sans); color: #6b7c81; }
 .rq-ico { display: grid; place-items: center; width: 8cqw; height: 8cqw; flex-shrink: 0; border-radius: 2.2cqw; background: #fbe4e6; color: #c8364a; font: 800 4cqw/1 var(--font-sans); }
-.rq-item--hot { border-color: #d9503a; box-shadow: 0 0 0 1cqw rgba(217, 80, 58, 0.14); }
-.rq-new { border-color: #d9503a; transform-origin: 50% 0; animation: rq-new 12s infinite; }
+.rq-item--hot { border-color: #c8364a; box-shadow: 0 0 0 1cqw rgba(200, 54, 74, 0.12); }
+.rq-new { border-color: #c8364a; transform-origin: 50% 0; animation: rq-new 12s infinite; }
 @keyframes rq-new {
   0%, 58% { opacity: 0; transform: scale(0.6); max-height: 0; padding: 0 3cqw; border-width: 0; margin-bottom: -2.4cqw; box-shadow: none; }
-  62% { opacity: 1; transform: scale(1.05); max-height: 30cqw; padding: 3cqw; border-width: 0.45cqw; margin-bottom: 0; box-shadow: 0 0 0 1.6cqw rgba(217, 80, 58, 0.22); }
-  66%, 100% { opacity: 1; transform: none; max-height: 30cqw; padding: 3cqw; border-width: 0.45cqw; margin-bottom: 0; box-shadow: 0 0 0 1cqw rgba(217, 80, 58, 0.14); }
+  62% { opacity: 1; transform: scale(1.05); max-height: 30cqw; padding: 3cqw; border-width: 0.45cqw; margin-bottom: 0; box-shadow: 0 0 0 1.6cqw rgba(200, 54, 74, 0.2); }
+  66%, 100% { opacity: 1; transform: none; max-height: 30cqw; padding: 3cqw; border-width: 0.45cqw; margin-bottom: 0; box-shadow: 0 0 0 1cqw rgba(200, 54, 74, 0.12); }
 }
 
 /* ──────── mockups explodidos (O que é) ──────── */
@@ -413,14 +426,14 @@
 
 /* ──────── lado bom do comparativo: borda em gradiente que gira ──────── */
 @property --lp-ang { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
-.win { position: relative; padding: 2px; border-radius: 1.6rem; background: conic-gradient(from var(--lp-ang), #f6d55c, #d9503a, #0f5c6e, #bfeef3, #f6d55c); animation: win-spin 6s linear infinite; box-shadow: 0 30px 60px -24px rgba(8, 62, 75, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.08); }
+.win { position: relative; padding: 2px; border-radius: 1.6rem; background: conic-gradient(from var(--lp-ang), #f6d55c, #5fb3bb, #0f5c6e, #bfeef3, #f6d55c); animation: win-spin 6s linear infinite; box-shadow: 0 30px 60px -24px rgba(8, 62, 75, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.08); }
 @keyframes win-spin { to { --lp-ang: 360deg; } }
 .win-in { position: relative; overflow: hidden; border-radius: calc(1.6rem - 2px); color: #fff; background: radial-gradient(120% 90% at 100% 0%, rgba(246, 213, 92, 0.24) 0%, transparent 55%), radial-gradient(90% 80% at 0% 100%, rgba(95, 179, 187, 0.4) 0%, transparent 60%), linear-gradient(160deg, #14707f 0%, #083e4b 100%); }
 .win-in::before { content: ""; position: absolute; inset: 0; pointer-events: none; background-image: var(--lp-grain); background-size: 220px; mix-blend-mode: soft-light; opacity: 0.45; }
 .win-pill { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.85rem; border-radius: 99px; background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.28); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; }
 .win-pill b { background: linear-gradient(90deg, #f6d55c, #bfeef3); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .win-check { display: flex; height: 1.5rem; width: 1.5rem; flex-shrink: 0; align-items: center; justify-content: center; border-radius: 50%; background: #06a742; color: #fff; font-size: 0.75rem; font-weight: 800; box-shadow: 0 0 0 4px rgba(6, 167, 66, 0.22), 0 0 18px rgba(6, 167, 66, 0.55); }
-.win-tag { position: absolute; z-index: 80; top: -0.9rem; left: 50%; transform: translateX(-50%); white-space: nowrap; padding: 0.3rem 0.85rem; border-radius: 99px; color: #fff; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; background: linear-gradient(90deg, #d9503a, #0f5c6e); box-shadow: 0 8px 22px -6px rgba(217, 80, 58, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3); }
+.win-tag { position: absolute; z-index: 80; top: -0.9rem; left: 50%; transform: translateX(-50%); white-space: nowrap; padding: 0.3rem 0.85rem; border-radius: 99px; color: #fff; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; background: linear-gradient(90deg, #138496, #0a4352); box-shadow: 0 8px 22px -6px rgba(19, 132, 150, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3); }
 
 /* ──────── "O que você recebe": bento ──────── */
 .bento { position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 0.75rem; padding: 1.25rem; border-radius: 1.5rem; background: #fff; border: 1px solid rgba(6, 38, 47, 0.08); box-shadow: 0 1px 0 rgba(6, 38, 47, 0.04), 0 18px 40px -28px rgba(8, 62, 75, 0.45); transition: transform 0.25s ease, box-shadow 0.25s ease; }

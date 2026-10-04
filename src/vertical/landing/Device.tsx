@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { CSSProperties, ReactNode } from "react";
 
 /**
@@ -57,6 +58,15 @@ export function GlassNote({ icon, title, text, className = "", tone = "brand" }:
         <p className="truncate text-[11px] font-bold sm:text-[13px]">{title}</p>
         {text && <p className="mt-0.5 line-clamp-2 text-[10px] leading-snug text-[var(--lp-body)] sm:text-[12px]">{text}</p>}
       </div>
+    </div>
+  );
+}
+
+/** Print real do app (390×844 @2x) abaixo da barra de status do celular. */
+export function Print({ src, alt, priority = false }: { src: string; alt: string; priority?: boolean }) {
+  return (
+    <div className="dv-print">
+      <Image src={src} alt={alt} fill priority={priority} unoptimized className="object-cover object-top" sizes="18rem" />
     </div>
   );
 }

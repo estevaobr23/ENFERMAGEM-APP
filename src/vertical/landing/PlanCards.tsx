@@ -1,10 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { offer } from "@/vertical/offer";
 import { goToCheckout } from "./CheckoutButton";
-import { Device } from "./Device";
+import { Device, Print } from "./Device";
 
 const brl = (cents: number) => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(cents / 100);
 
@@ -21,10 +20,10 @@ function PlanPhones({ small = false }: { small?: boolean }) {
   return (
     <>
       <Device width={w} label="Painel do aplicativo no celular">
-        <Image src="/landing/app/m-dash.webp" alt="" fill unoptimized className="object-cover object-top" sizes="9rem" />
+        <Print src="/landing/app/m-dash.webp" alt="" />
       </Device>
       <Device width={w} label="Matérias do aplicativo no celular">
-        <Image src="/landing/app/m-cats.webp" alt="" fill unoptimized className="object-cover object-top" sizes="9rem" />
+        <Print src="/landing/app/m-cats.webp" alt="" />
       </Device>
     </>
   );
@@ -58,7 +57,7 @@ export function PlanCards() {
             <h3 className="text-3xl">{pro.name}</h3>
             <p className="mt-1 text-sm text-[var(--lp-body)]">{pro.tagline}</p>
             <div className="mt-5">
-              <p className="text-sm text-[var(--lp-body)]">tudo do Básico + a prática completa por</p>
+              <p className="text-sm text-[var(--lp-body)]">tudo do Básico + as questões comentadas por</p>
               <p className="text-6xl font-extrabold leading-none tracking-[-.02em] text-[#06a742]">{brl(pro.priceCents)}</p>
               <p className="mt-2 text-sm font-semibold">pagamento único · <b className="text-[#06a742]">sem mensalidade</b></p>
             </div>
@@ -106,7 +105,7 @@ export function PlanCards() {
           <button type="button" onClick={() => setOpen(false)} aria-label="Fechar" className="absolute right-4 top-3 text-3xl leading-none text-[var(--lp-body)]">×</button>
           <p className="text-xs font-extrabold uppercase tracking-[.14em] text-[var(--lp-hl-deep)]">Espere! Uma oferta só pra você</p>
           <h3 className="mt-2 text-2xl leading-tight">Leve o {pro.name} por menos que o Básico</h3>
-          <p className="mt-2 text-sm leading-relaxed text-[var(--lp-body)]">Questões explicadas, fila “Revisar novamente”, progresso por área e busca imediata — o pacote inteiro, por um preço especial.</p>
+          <p className="mt-2 text-sm leading-relaxed text-[var(--lp-body)]">Questões comentadas, fila “Revisar novamente”, progresso por área e busca imediata — o aplicativo completo, por um preço especial.</p>
           <div className="plan-complete-visual !min-h-0 !py-4" aria-hidden><PlanPhones small /></div>
           <p className="mt-4 text-4xl font-extrabold tracking-[-.02em] text-[#06a742]"><s className="mr-2 text-lg font-bold text-[hsl(348,76%,46%)]">{brl(pro.priceCents)}</s>{brl(downsell.priceCents)}</p>
           <a
