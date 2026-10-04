@@ -10,7 +10,7 @@
 // lida em 2026-09-28):
 //   corpo  { secret, event, data }   — data é objeto (V1) ou lista (V2)
 //   header X-Cakto-Timestamp + X-Cakto-Signature: v1=HMAC-SHA256(secret, "{ts}.{corpo cru}")
-//   evento purchase_approved (status "paid") | refund | chargeback | ...
+//   evento purchase_approved | refund | chargeback | ... (o evento decide; data.status não é confiável)
 //   data.id = pedido (chave de deduplicação), data.offer.id = oferta, data.customer.email
 // =============================================================================
 
@@ -122,8 +122,9 @@ const caktoAdapter: Adapter = {
       const email = typeof d?.customer?.email === "string" ? d.customer.email.trim().toLowerCase() : "";
       const offerId = d?.offer?.id != null ? String(d.offer.id) : "";
       if (!d?.id || !email || !offerId) continue;
-      // aprovação só vale com o pedido efetivamente pago
-      if (status === "approved" && d.status !== "paid") continue;
+      // Quem decide é o EVENTO (já autenticado), não data.status: a Cakto manda
+      // purchase_approved com data.status "waiting_payment" — conferir status
+      // aqui faria a compra paga nunca liberar, sem erro nenhum.
       const when = d[CAKTO_DATE_BY_STATUS[status]] ?? d.createdAt;
       const occurredAt = when && !Number.isNaN(Date.parse(when)) ? new Date(when).toISOString() : new Date().toISOString();
       purchases.push({
