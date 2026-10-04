@@ -140,7 +140,15 @@
 }
 .plan-complete-visual .dv + .dv { margin-left: -1.75rem; transform: translateY(1.5rem); }
 
-/* ───────────────────────── entrada com a rolagem (CSS scroll-driven) ───────────────────────── */
+/* ───────────────────────── entrada com a rolagem (CSS scroll-driven) ─────────────────────────
+ * Safari < 26 e Firefox (recurso desligado por padrão) não suportam
+ * animation-timeline: view(). Sem este bloco fora do @supports, o estado
+ * "from" do keyframe (opacity: 0) nunca é sobrescrito nesses navegadores e
+ * a seção inteira fica invisível, permanentemente, pra quem não tem Chrome
+ * recente. Visível por padrão; o @supports abaixo troca para o efeito de
+ * entrada ao rolar quando o navegador aceita. */
+.rv, .flow-head { opacity: 1; }
+.flow-line { stroke-dashoffset: 0; }
 @supports (animation-timeline: view()) {
   .rv { animation: rv-up linear both; animation-timeline: view(); animation-range: entry 0% entry 70%; }
   .rv-l { animation-name: rv-left; }

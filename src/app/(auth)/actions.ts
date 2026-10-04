@@ -1,83 +1,56 @@
 "use server";
 
-import { headers } from "next/headers";
+import { randomBytes } from "node:crypto";
 import { redirect } from "next/navigation";
+import { createAdminClient } from "@/core/supabase/admin";
 import { createClient } from "@/core/supabase/server";
 import { safeNext } from "@/core/auth/guard";
 
-export type AuthState = { error?: string; info?: string; email?: string; sent?: boolean; unconfirmed?: boolean } | undefined;
+export type AuthState = { error?: string; email?: string } | undefined;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-
-async function siteOrigin() {
-  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "");
-  const values = await headers();
-  const host = values.get("x-forwarded-host") ?? values.get("host") ?? "localhost:3000";
-  const proto = values.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
-  return `${proto}://${host}`;
-}
 
 function readEmail(formData: FormData) {
   return String(formData.get("email") ?? "").trim().toLowerCase();
 }
 
-export async function signIn(_: AuthState, formData: FormData): Promise<AuthState> {
+/**
+ * Login sem senha: só o e-mail usado na compra. Exige entitlement ativo —
+ * quem não comprou não entra, mesmo sabendo o e-mail de alguém.
+ * A senha usada no signInWithPassword é gerada por requisição e nunca sai
+ * do servidor; ela existe só porque o Supabase Auth exige alguma credencial.
+ */
+export async function enterByEmail(_: AuthState, formData: FormData): Promise<AuthState> {
   const email = readEmail(formData);
-  const password = String(formData.get("password") ?? "");
-  if (!EMAIL.test(email) || !password) return { error: "Informe e-mail e senha.", email };
-  const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) {
-    if (error.code === "email_not_confirmed") return { error: "Você ainda não confirmou seu e-mail.", email, unconfirmed: true };
-    return { error: "E-mail ou senha incorretos.", email };
+  if (!EMAIL.test(email)) return { error: "Informe um e-mail válido.", email };
+
+  const admin = createAdminClient();
+
+  const { count } = await admin
+    .from("entitlements")
+    .select("id", { count: "exact", head: true })
+    .eq("buyer_email", email)
+    .eq("status", "active");
+
+  if (!count) {
+    return { error: "Não encontramos uma compra ativa com este e-mail. Confira se digitou o mesmo e-mail usado no pagamento.", email };
   }
+
+  const password = randomBytes(24).toString("base64url");
+
+  const { data: userId } = await admin.rpc("get_user_id_by_email", { p_email: email });
+
+  if (userId) {
+    await admin.auth.admin.updateUserById(userId, { password });
+  } else {
+    const { error: createError } = await admin.auth.admin.createUser({ email, password, email_confirm: true });
+    if (createError) return { error: "Não foi possível liberar seu acesso agora. Tente novamente em instantes.", email };
+  }
+
+  const supabase = await createClient();
+  const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+  if (signInError) return { error: "Não foi possível entrar agora. Tente novamente em instantes.", email };
+
+  await supabase.rpc("claim_my_entitlements");
+
   redirect(safeNext(String(formData.get("redirect") ?? "")));
 }
-
-export async function signUp(_: AuthState, formData: FormData): Promise<AuthState> {
-  const email = readEmail(formData);
-  const name = String(formData.get("name") ?? "").trim().slice(0, 120);
-  const password = String(formData.get("password") ?? "");
-  if (!name) return { error: "Informe seu nome.", email };
-  if (!EMAIL.test(email)) return { error: "Informe um e-mail válido.", email };
-  if (password.length < 8) return { error: "A senha precisa ter pelo menos 8 caracteres.", email };
-  const supabase = await createClient();
-  const { error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: { data: { name }, emailRedirectTo: `${await siteOrigin()}/auth/callback?next=/app` },
-  });
-  if (error) {
-    if (error.code === "user_already_exists") return { error: "Já existe uma conta com este e-mail. Faça login.", email };
-    if (error.code === "weak_password") return { error: "Use uma senha mais forte, com letras e números.", email };
-    if (error.status === 429) return { error: "Muitas tentativas. Aguarde alguns minutos.", email };
-    return { error: "Não foi possível criar a conta agora. Tente novamente.", email };
-  }
-  return { info: `Enviamos um link de confirmação para ${email}.`, email, sent: true };
-}
-
-export async function resendConfirmation(_: AuthState, formData: FormData): Promise<AuthState> {
-  const email = readEmail(formData);
-  if (!EMAIL.test(email)) return { error: "Informe um e-mail válido.", email };
-  const supabase = await createClient();
-  await supabase.auth.resend({ type: "signup", email, options: { emailRedirectTo: `${await siteOrigin()}/auth/callback?next=/app` } });
-  return { info: `Reenviamos o link de confirmação para ${email}.`, email, sent: true };
-}
-
-export async function requestPasswordReset(_: AuthState, formData: FormData): Promise<AuthState> {
-  const email = readEmail(formData);
-  if (!EMAIL.test(email)) return { error: "Informe um e-mail válido.", email };
-  const supabase = await createClient();
-  await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${await siteOrigin()}/auth/callback?next=/nova-senha` });
-  return { info: "Se existir uma conta com este e-mail, você receberá um link para criar uma nova senha.", email, sent: true };
-}
-
-export async function updatePassword(_: AuthState, formData: FormData): Promise<AuthState> {
-  const password = String(formData.get("password") ?? "");
-  if (password.length < 8) return { error: "A senha precisa ter pelo menos 8 caracteres." };
-  if (password !== String(formData.get("confirm") ?? "")) return { error: "As senhas não conferem." };
-  const supabase = await createClient();
-  const { error } = await supabase.auth.updateUser({ password });
-  if (error) return { error: "O link expirou. Peça uma nova recuperação de senha." };
-  redirect("/app?ok=senha");
-}
-

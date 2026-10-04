@@ -889,6 +889,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: number
       }
+      get_user_id_by_email: {
+        Args: { p_email: string }
+        Returns: string
+      }
       finish_topic_quiz: { Args: { p_topic_id: string }; Returns: Json }
       mark_topic_reviewed: { Args: { p_topic_id: string }; Returns: Json }
       my_answered_feedback: {

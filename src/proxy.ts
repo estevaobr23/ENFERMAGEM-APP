@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const AUTH_PAGES = ["/login", "/cadastro"];
+const AUTH_PAGES = ["/login"];
 
 // Camada 1 (conveniência): só responde "tem sessão?". Quem protege os dados é
 // a RLS; o acesso comprado é conferido no layout do app (guard).
@@ -45,5 +45,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/app/:path*", "/login", "/cadastro", "/nova-senha"],
+  matcher: ["/app/:path*", "/login"],
 };
