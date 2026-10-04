@@ -12,3 +12,11 @@ test("checkout conserva somente parâmetros de atribuição conhecidos", () => {
   assert.equal(url.searchParams.has("invasor"), false);
 });
 
+
+test("checkout repassa todo utm_* e os IDs de clique dos anúncios", () => {
+  const result = withUtm("https://pay.cakto.com.br/cm5op9a", "?utm_source=FB&utm_medium=cpc&utm_campaign=camp|123&utm_content=ad|456&utm_term=conj|789&utm_id=1&utm_placement=feed&fbclid=xyz&ttclid=t1&sck=s1&src=s2&xcod=x1");
+  const url = new URL(result);
+  for (const [k, v] of [["utm_source", "FB"], ["utm_medium", "cpc"], ["utm_campaign", "camp|123"], ["utm_content", "ad|456"], ["utm_term", "conj|789"], ["utm_id", "1"], ["utm_placement", "feed"], ["fbclid", "xyz"], ["ttclid", "t1"], ["sck", "s1"], ["src", "s2"], ["xcod", "x1"]]) {
+    assert.equal(url.searchParams.get(k), v);
+  }
+});

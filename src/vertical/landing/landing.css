@@ -115,3 +115,25 @@
 @media (min-width:900px){.lp-surface{padding:6.5rem 1.5rem}.lp-hero{padding-top:4rem}.lp-hero-grid,.lp-story{grid-template-columns:1fr 1fr;gap:5rem}.lp-story--reverse .lp-story-copy{order:2}.lp-story-copy{text-align:left}.lp-story-copy>p:not(.lp-eyebrow),.lp-honesty{margin-left:0}.lp-pain-grid{grid-template-columns:repeat(3,1fr)}.lp-feature-grid{grid-template-columns:repeat(4,1fr)}.lp-receive{grid-template-columns:repeat(3,1fr);align-items:stretch}.lp-receive-device{grid-column:2;grid-row:1/3;display:grid;place-items:center}.lp-receive-card:nth-child(n+5){grid-row:2}.lp-receive-card:nth-child(5){grid-column:1}.lp-receive-card:nth-child(6){grid-column:3}.lp-receive-card:nth-child(7){grid-column:1}.lp-receive-card:nth-child(8){grid-column:3}.lp-note-a{left:-7rem;width:13rem}.lp-note-b{right:-7rem;width:13rem}.lp-glass{padding:.75rem}.lp-glass b{font-size:.78rem}.lp-glass small{font-size:.68rem}.lp-plan{padding:2.2rem}}
 @media (max-width:390px){.lp-surface{padding-inline:.85rem}.lp-note-a{left:-1.7rem}.lp-note-b{right:-1.7rem}.lp-glass{width:9.4rem}.lp-glass b{font-size:.62rem}.lp-glass small{font-size:.54rem}.lp-compare{gap:.35rem}.lp-compare-side{padding-inline:.15rem}.lp-guarantee{align-items:flex-start}.lp-guarantee>span{width:3rem;height:3rem}}
 @media (prefers-reduced-motion:reduce){.lp *,.lp *::before,.lp *::after{animation:none!important;transition:none!important}.sr-home,.sm-question,.sm-result{opacity:0!important}.sr-topic,.sm-dashboard{opacity:1!important;translate:0!important}.so-page{transform:none!important}.so-pinch,.lp-finger{display:none!important}}
+
+/* planos (Completo + Básico) e modal de downsell */
+.lp-plans { display:grid; gap:1.25rem; max-width:62rem; margin:auto; align-items:start; }
+.lp-plans .lp-plan { width:100%; margin:0; }
+.lp-plan--basic { border-color:#d5dee2; }
+.lp-plan--basic .lp-plan-pill { background:#5d6f78; }
+.lp-buy { cursor:pointer; }
+.lp-buy--ghost { background:white; color:var(--lp-auth-deep); border:2px solid var(--lp-auth-deep); box-shadow:none; }
+.lp-downsell { width:min(28rem,calc(100vw - 2rem)); margin:auto; border:0; border-radius:1.4rem; padding:0; background:white; color:var(--lp-ink); box-shadow:0 40px 90px -30px #001c22; }
+.lp-downsell::backdrop { background:rgba(4,30,38,.72); }
+.lp-downsell__box { position:relative; padding:1.8rem 1.4rem 1.4rem; text-align:center; }
+.lp-downsell__x { position:absolute; top:.6rem; right:.8rem; border:0; background:none; color:var(--lp-body); font-size:1.6rem; line-height:1; cursor:pointer; }
+.lp-downsell__eyebrow { color:var(--lp-bad); font-size:.7rem; font-weight:900; letter-spacing:.12em; }
+.lp-downsell h3 { margin-top:.5rem; font-size:1.45rem; font-weight:900; line-height:1.2; }
+.lp-downsell h3 b { color:var(--lp-auth); }
+.lp-downsell__text { margin-top:.6rem; color:var(--lp-body); font-size:.85rem; line-height:1.5; }
+.lp-downsell__price { display:flex; align-items:baseline; justify-content:center; gap:.7rem; margin-top:1rem; }
+.lp-downsell__price s { color:var(--lp-body); font-size:1rem; }
+.lp-downsell__price strong { color:var(--lp-buy); font-size:2.4rem; font-weight:900; }
+.lp-downsell .lp-buy { width:100%; border:0; }
+.lp-downsell__no { margin-top:.9rem; border:0; background:none; color:var(--lp-body); font-size:.78rem; text-decoration:underline; cursor:pointer; }
+@media (min-width:900px){ .lp-plans { grid-template-columns:1fr 1fr; } }

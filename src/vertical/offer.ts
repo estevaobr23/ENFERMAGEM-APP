@@ -41,18 +41,35 @@ export type Bonus = { title: string; text: string; priceCents: number | null };
 export const offer = {
   productName: "Revisão Visual para Concurso de Técnico de Enfermagem",
   /** ex.: "Pagamento único · acesso por 12 meses". null = TODO_OWNER_CONFIGURATION */
-  paymentNote: null as string | null,
+  paymentNote: "Pagamento único" as string | null,
   /** dias de garantia. null = TODO_OWNER_CONFIGURATION (a seção mostra só a política genérica do gateway) */
-  guaranteeDays: null as number | null,
+  guaranteeDays: 7 as number | null,
+  // Cakto · produto c49d1d99-7fe1-4b64-aef0-fbbc32eea718. Os IDs das ofertas também estão em public.offers (130_cakto_offers.sql).
   plans: [
     {
-      key: "acesso-completo",
-      name: "Acesso completo",
-      tagline: "Todas as áreas, mapas, questões e a sua fila de revisão",
-      priceCents: null,
+      key: "basico",
+      name: "Plano Básico",
+      tagline: "O essencial para revisar pelos mapas e resumos",
+      priceCents: 3790,
       compareAtCents: null,
       installments: null,
-      checkoutUrl: process.env.NEXT_PUBLIC_CHECKOUT_URL_ACESSO_COMPLETO ?? "",
+      checkoutUrl: process.env.NEXT_PUBLIC_CHECKOUT_URL_BASICO || "https://pay.cakto.com.br/i85bp2f",
+      recommended: false,
+      includes: [
+        "As 8 áreas do concurso organizadas",
+        "Mapa visual de cada assunto",
+        "Resumo e pontos-chave",
+        "Fonte de cada conteúdo indicada",
+      ],
+    },
+    {
+      key: "acesso-completo",
+      name: "Plano Completo",
+      tagline: "Todas as áreas, mapas, questões e a sua fila de revisão",
+      priceCents: 4790,
+      compareAtCents: null,
+      installments: null,
+      checkoutUrl: process.env.NEXT_PUBLIC_CHECKOUT_URL_ACESSO_COMPLETO || "https://pay.cakto.com.br/cm5op9a",
       recommended: true,
       includes: [
         "As 8 áreas do concurso organizadas",
@@ -66,6 +83,12 @@ export const offer = {
       ],
     },
   ] satisfies PlanOffer[],
+  /** oferta do modal que aparece ao escolher o básico: o Completo por menos */
+  downsell: {
+    name: "Plano Completo — oferta especial",
+    priceCents: 3290,
+    checkoutUrl: process.env.NEXT_PUBLIC_CHECKOUT_URL_DOWNSELL || "https://pay.cakto.com.br/c95ejen",
+  },
   /** TODO_OWNER_CONFIGURATION: bônus ainda não definidos — seção some enquanto vazio */
   bonuses: [] as Bonus[],
 };

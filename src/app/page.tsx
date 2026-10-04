@@ -4,9 +4,11 @@ import type { ReactNode } from "react";
 import { BrandMark, Logo } from "@/vertical/brand";
 import { CategoryEmblem } from "@/components/ui/CategoryEmblem";
 import { CATEGORIES, publishedCounts } from "@/vertical/content";
-import { offer, isPriceConfigured } from "@/vertical/offer";
+import { offer } from "@/vertical/offer";
 import { vertical } from "@/vertical/config";
-import { CheckoutButton } from "@/vertical/landing/CheckoutButton";
+import { UtmCapture } from "@/vertical/landing/CheckoutButton";
+import { PlanCards } from "@/vertical/landing/PlanCards";
+import { UtmifyPixel } from "@/vertical/landing/UtmifyPixel";
 import { Device, GlassNote } from "@/vertical/landing/Device";
 import { DEMO_TOPIC_TITLE, SceneMistake, SceneNew, SceneOld, SceneReview } from "@/vertical/landing/scenes";
 import "@/vertical/landing/landing.css";
@@ -32,12 +34,12 @@ function FlowArrow({ flip = false }: { flip?: boolean }) {
   return <svg className={`lp-flow-arrow ${flip ? "lp-flow-arrow--flip" : ""}`} viewBox="0 0 120 70" aria-hidden><path className="lp-flow-line" pathLength="1" d="M18 4 C 18 38, 102 25, 102 58" /><path className="lp-flow-head" d="M94 51 L102 60 L110 50" /></svg>;
 }
 
-function Check({ children }: { children: ReactNode }) { return <li><span aria-hidden>✓</span>{children}</li>; }
 
 export default function SalesPage() {
-  const plan = offer.plans[0];
-  const price = isPriceConfigured(plan) ? new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(plan.priceCents! / 100) : null;
+  const price = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(Math.min(...offer.plans.map((plan) => plan.priceCents)) / 100);
   return <div className="lp overflow-x-clip">
+    <UtmifyPixel />
+    <UtmCapture />
     {/* 1 · Hero */}
     <section className="lp-surface lp-auth lp-hero">
       <div className="lp-wrap lp-hero-grid">
@@ -68,10 +70,10 @@ export default function SalesPage() {
     <section className="lp-surface lp-neutral"><div className="lp-wrap"><SectionHead eyebrow="O QUE VOCÊ RECEBE" title={<>As oito áreas organizadas para <span className="lp-hl">revisar e praticar.</span></>} /><div className="lp-receive">{CATEGORIES.map((category,index)=><article className={`lp-receive-card tone-${category.tone} rv rv-d${(index%4)+1}`} key={category.slug}><span>{String(index+1).padStart(2,"0")}</span><i aria-hidden><CategoryEmblem slug={category.slug} size={72} /></i><h3>{category.shortTitle}</h3><p>{category.slug === "calculos-de-enfermagem" ? "Pratique cálculos com exercícios educacionais e resolução explicada." : `Revise ${category.shortTitle} sem procurar em dezenas de páginas.`}</p></article>)}</div><div className="lp-receive-device"><Device width="15rem" label="Dashboard real do aplicativo com oito áreas e progresso"><div className="sn-scene"><div className="scene-top"><span className="scene-logo"><Image src="/interface/brand/revisao-tecnico-mark.svg" alt="" width={32} height={32} /></span><b>Seu progresso</b><i>•••</i></div><div className="lp-mini-progress"><b>{counts.categories} áreas</b><span><i style={{width:"42%"}} /></span><small>Continue sua revisão</small></div>{CATEGORIES.slice(0,4).map((category)=><div className="lp-mini-area" key={category.slug}><span><CategoryEmblem slug={category.slug} size={38} /></span><b>{category.shortTitle}</b><i /></div>)}</div></Device></div></div></section>
 
     {/* 9 · Bônus */}
-    <section className="lp-surface lp-struct"><div className="lp-wrap"><SectionHead eyebrow="SEM ENCHIMENTO" title={<>O valor está no <span className="lp-hl">aplicativo funcionando.</span></>} text={offer.bonuses.length ? "Os bônus definidos para a oferta aparecem abaixo." : "Nenhum bônus fictício foi colocado para inflar a oferta. Preço e bônus aguardam a configuração comercial do responsável."} />{offer.bonuses.length>0&&<div className="lp-feature-grid">{offer.bonuses.map((bonus)=><article className="lp-feature" key={bonus.title}><h3>{bonus.title}</h3><p>{bonus.text}</p></article>)}</div>}<div className="lp-center"><CtaToPlans /></div></div></section>
+    <section className="lp-surface lp-struct"><div className="lp-wrap"><SectionHead eyebrow="SEM ENCHIMENTO" title={<>O valor está no <span className="lp-hl">aplicativo funcionando.</span></>} text={offer.bonuses.length ? "Os bônus definidos para a oferta aparecem abaixo." : "Nenhum bônus fictício foi colocado para inflar a oferta: o que você recebe é o aplicativo completo, funcionando."} />{offer.bonuses.length>0&&<div className="lp-feature-grid">{offer.bonuses.map((bonus)=><article className="lp-feature" key={bonus.title}><h3>{bonus.title}</h3><p>{bonus.text}</p></article>)}</div>}<div className="lp-center"><CtaToPlans /></div></div></section>
 
     {/* 10 · Planos */}
-    <section id="planos" className="lp-surface lp-auth"><div className="lp-wrap"><SectionHead light eyebrow="ACESSO" title={<>Tudo o que você precisa para <span>revisar com direção.</span></>} text="A condição comercial ainda não foi definida. O checkout só será habilitado quando houver uma oferta real configurada." /><div className="lp-plan rv"><span className="lp-plan-pill">ACESSO COMPLETO</span><h3>{plan.name}</h3><p>{plan.tagline}</p><div className="lp-price">{price ?? "Preço em configuração"}</div>{offer.paymentNote&&<small>{offer.paymentNote}</small>}<ul>{plan.includes.map((item)=><Check key={item}>{item}</Check>)}</ul><CheckoutButton url={plan.checkoutUrl} className="lp-buy">QUERO COMEÇAR MINHA REVISÃO</CheckoutButton></div><p className="lp-access-note">Depois do pagamento, você cria a conta com <b>o mesmo e-mail da compra</b>, confirma esse e-mail e entra no aplicativo.</p></div></section>
+    <section id="planos" className="lp-surface lp-auth"><div className="lp-wrap"><SectionHead light eyebrow="ACESSO" title={<>Tudo o que você precisa para <span>revisar com direção.</span></>} text="Escolha o seu plano. Pagamento único pelo checkout seguro da Cakto." /><PlanCards /><p className="lp-access-note">Depois do pagamento, você cria a conta com <b>o mesmo e-mail da compra</b>, confirma esse e-mail e entra no aplicativo.</p></div></section>
 
     {/* 11 · Garantia */}
     <section className="lp-surface lp-warm"><div className="lp-wrap"><div className="lp-guarantee rv"><span aria-hidden>✓</span><div><p className="lp-eyebrow lp-eyebrow--dark">COMPRA TRANSPARENTE</p><h2>{offer.guaranteeDays ? `Garantia de ${offer.guaranteeDays} dias` : "Garantia em configuração"}</h2><p>{offer.guaranteeDays ? "Consulte as condições apresentadas no checkout oficial antes de concluir a compra." : "O prazo e as condições de garantia ainda não foram informados pelo responsável e não serão inventados nesta página."}</p></div></div></div></section>
@@ -80,7 +82,7 @@ export default function SalesPage() {
     <section id="duvidas" className="lp-surface lp-neutral"><div className="lp-wrap"><SectionHead eyebrow="DÚVIDAS" title={<>Antes de <span className="lp-hl">começar.</span></>} /><div className="lp-faq">{[["Isso é um curso?","Não. É um aplicativo de revisão com mapas visuais, resumos, questões e progresso."],["Preciso instalar alguma coisa?","Não. Você acessa pelo navegador do celular ou computador."],["Como recebo o acesso?","Depois da compra, crie a conta com o mesmo e-mail, confirme esse e-mail e entre no aplicativo."],["O aplicativo garante aprovação?","Não. Ele organiza e facilita sua revisão, mas o resultado depende do estudo e de outros fatores."],["Posso usar os cálculos em um paciente?","Não. Os exercícios são exclusivamente educacionais e não substituem protocolos, supervisão ou decisão clínica."],["Quais conteúdos aparecem?",`Somente temas com status publicado e fonte registrada. Hoje o demo validado tem ${counts.topics} temas e ${counts.questions} questões.`]].map(([q,a])=><details key={q}><summary>{q}<span>+</span></summary><p>{a}</p></details>)}</div></div></section>
 
     {/* 13 · CTA final */}
-    <section className="lp-surface lp-alert"><div className="lp-wrap lp-final"><BrandMark /><h2>Pare de tentar revisar tudo de novo. <em>Revise o que importa agora.</em></h2><p>{price ? `A partir de ${price}` : "Oferta comercial em configuração"}</p><CtaToPlans>QUERO ORGANIZAR MINHA REVISÃO</CtaToPlans></div></section>
+    <section className="lp-surface lp-alert"><div className="lp-wrap lp-final"><BrandMark /><h2>Pare de tentar revisar tudo de novo. <em>Revise o que importa agora.</em></h2><p>A partir de {price}</p><CtaToPlans>QUERO ORGANIZAR MINHA REVISÃO</CtaToPlans></div></section>
 
     {/* 14 · Rodapé */}
     <footer className="lp-footer"><div className="lp-wrap"><Logo className="lp-footer-logo" /><p>{vertical.disclaimer}</p><p>Conteúdo para preparação de concursos. Não há promessa de aprovação ou orientação clínica.</p><Link href="/login">Área do aluno</Link><span>© {new Date().getFullYear()} {offer.productName}</span></div></footer>
