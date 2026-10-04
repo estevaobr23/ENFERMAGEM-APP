@@ -12,7 +12,6 @@ export { VISUAL_ASSETS, findAsset, visualAssetById, visualAssetsForTopic } from 
 /**
  * FONTE ÚNICA do conteúdo de revisão. Daqui saem:
  *   - o seed do banco (npm run content:seed → supabase/seeds/20_content.sql)
- *   - os dados das cenas da página de vendas (src/vertical/landing/scenes.tsx)
  * Assim, o que a página mostra existe de verdade no app.
  */
 export const CATEGORIES: CategorySeed[] = [SUS, FUNDAMENTOS, BIOSSEGURANCA, URGENCIA, MULHER, CRIANCA, ETICA, CALCULOS];

@@ -43,7 +43,7 @@ export const offer = {
   /** ex.: "Pagamento único · acesso por 12 meses". null = TODO_OWNER_CONFIGURATION */
   paymentNote: "Pagamento único" as string | null,
   /** dias de garantia. null = TODO_OWNER_CONFIGURATION (a seção mostra só a política genérica do gateway) */
-  guaranteeDays: 7 as number | null,
+  guaranteeDays: 15 as number | null,
   // Cakto · produto c49d1d99-7fe1-4b64-aef0-fbbc32eea718. Os IDs das ofertas também estão em public.offers (130_cakto_offers.sql).
   plans: [
     {
@@ -75,11 +75,11 @@ export const offer = {
         "As 8 áreas do concurso organizadas",
         "Mapa visual de cada assunto",
         "Resumo e pontos-chave",
-        "Questões com explicação da resposta",
-        "Fila “Revisar novamente” com o que você errou",
-        "Progresso e acerto por área",
-        "Busca e favoritos",
         "Fonte de cada conteúdo indicada",
+        "Questões com explicação da resposta",
+        "Fila “Revisar novamente” com seus erros",
+        "Progresso e acerto por área",
+        "Busca imediata em todo o conteúdo",
       ],
     },
   ] satisfies PlanOffer[],
