@@ -17,15 +17,15 @@ test("landing mobile, CTAs e ausência de overflow", async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 800 });
   await page.goto("/?utm_source=e2e&utm_campaign=concurso");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("não precisa");
-  await expect(page.locator("section")).toHaveCount(12);
+  await expect(page.locator("section")).toHaveCount(13);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.getByRole("link", { name: /QUERO REVISAR COM MAIS CLAREZA/ }).first().click();
   await expect(page).toHaveURL(/#planos$/);
   // plano básico abre o downsell; os links de checkout levam as UTMs da entrada
-  await page.getByRole("button", { name: "Quero só o Básico" }).click();
+  await page.getByRole("button", { name: "COMEÇAR COM O BÁSICO" }).click();
   await expect(page.getByRole("heading", { name: /Leve o Plano Completo/ })).toBeVisible();
   await page.route(/pay\.cakto\.com\.br/, (route) => route.fulfill({ status: 200, body: "ok" }));
-  await page.getByRole("link", { name: /Sim, quero o Completo/ }).click();
+  await page.getByRole("link", { name: /SIM, QUERO O COMPLETO/ }).click();
   await expect(page).toHaveURL(/pay\.cakto\.com\.br\/.*utm_source=e2e.*utm_campaign=concurso|pay\.cakto\.com\.br\/.*utm_campaign=concurso.*utm_source=e2e/);
   await page.goto("/cadastro?email=e2e.cadastro.visual@example.com");
   await expect(page.getByLabel("E-mail")).toHaveValue("e2e.cadastro.visual@example.com");

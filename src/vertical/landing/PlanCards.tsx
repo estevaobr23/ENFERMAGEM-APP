@@ -1,24 +1,47 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { offer } from "@/vertical/offer";
 import { goToCheckout } from "./CheckoutButton";
-import { DeviceDuo } from "./frames";
+import { Device } from "./Device";
 
 const brl = (cents: number) => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(cents / 100);
 
-/** O que o Básico não tem (= os recursos de prática do Completo). */
-export const ONLY_FULL = ["Questões com explicação da resposta", "Fila “Revisar novamente” com seus erros", "Progresso e acerto por área", "Busca imediata em todo o conteúdo"];
+function Check({ ok }: { ok: boolean }) {
+  return ok ? (
+    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#06a742] text-[11px] font-bold text-white" aria-label="Incluído">✓</span>
+  ) : (
+    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[hsl(354,76%,50%)] text-[11px] font-bold text-white" aria-label="Não incluído">✕</span>
+  );
+}
+
+function PlanPhones({ small = false }: { small?: boolean }) {
+  const w = small ? "6.4rem" : "8.6rem";
+  return (
+    <>
+      <Device width={w} label="Painel do aplicativo no celular">
+        <Image src="/landing/app/m-dash.webp" alt="" fill unoptimized className="object-cover object-top" sizes="9rem" />
+      </Device>
+      <Device width={w} label="Matérias do aplicativo no celular">
+        <Image src="/landing/app/m-cats.webp" alt="" fill unoptimized className="object-cover object-top" sizes="9rem" />
+      </Device>
+    </>
+  );
+}
 
 /**
- * Oferta: Básico (decoy, à esquerda) → Completo (à direita).
- * O botão do Básico abre o downsell; os de compra vão ao checkout com as UTMs.
+ * Planos: entrada (recua, à esquerda / primeiro no mobile) e recomendado
+ * (maior, à direita). O botão do Básico abre o downsell; os botões de compra
+ * vão ao checkout da Cakto com as UTMs da visita (goToCheckout → withUtm).
  */
 export function PlanCards() {
   const [open, setOpen] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null);
-  const [basic, full] = offer.plans;
+  const [entry, pro] = offer.plans;
   const { downsell } = offer;
+  const proExtras = pro.includes.filter((t) => !entry.includes.includes(t));
+  const proShared = pro.includes.filter((t) => entry.includes.includes(t));
 
   useEffect(() => {
     if (open) dialog.current?.showModal();
@@ -27,53 +50,80 @@ export function PlanCards() {
 
   return (
     <>
-      <div className="offer-grid">
-        {/* BLOCO 1 — PLANO BÁSICO */}
-        <div className="plan basic reveal">
-          <h3>{basic.name}</h3>
-          <p className="psub">{basic.tagline}</p>
-          <div className="price">{brl(basic.priceCents)}</div>
-          <ul>
-            {basic.includes.map((item) => <li key={item} className="yes"><span className="ic">✓</span><span>{item}</span></li>)}
-            {ONLY_FULL.map((item) => <li key={item} className="no"><span className="ic">✕</span><span>{item}</span></li>)}
+      <div className="mt-10 grid items-center gap-8 md:grid-cols-[0.85fr_1.15fr]">
+        {/* COMPLETO — o recomendado, à direita / depois do Básico */}
+        <div className="rv rv-pop relative order-2 rounded-[2rem] border-[3px] border-[var(--lp-vip)] bg-white p-6 text-[var(--lp-ink)] shadow-[0_30px_70px_-20px_rgba(0,0,0,.55)] sm:p-8">
+          <span className="absolute -top-4 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-[var(--lp-hl-deep)] px-5 py-1.5 text-xs font-extrabold uppercase tracking-wide text-white">⭐ Mais escolhido</span>
+          <div className="text-center">
+            <h3 className="text-3xl">{pro.name}</h3>
+            <p className="mt-1 text-sm text-[var(--lp-body)]">{pro.tagline}</p>
+            <div className="mt-5">
+              <p className="text-sm text-[var(--lp-body)]">tudo do Básico + a prática completa por</p>
+              <p className="text-6xl font-extrabold leading-none tracking-[-.02em] text-[#06a742]">{brl(pro.priceCents)}</p>
+              <p className="mt-2 text-sm font-semibold">pagamento único · <b className="text-[#06a742]">sem mensalidade</b></p>
+            </div>
+          </div>
+          <div className="plan-complete-visual" aria-hidden><PlanPhones /></div>
+          <p className="mb-3 mt-7 text-left text-xs font-extrabold uppercase tracking-[.15em] text-[var(--lp-hl-deep)]">O que está incluso:</p>
+          <ul className="space-y-2.5 text-left">
+            {[...proShared, ...proExtras].map((t) => (
+              <li key={t} className="flex items-start gap-2.5 text-[15px] leading-snug"><Check ok />{t}</li>
+            ))}
           </ul>
-          <button type="button" className="btn btn-ghost btn-block" onClick={() => setOpen(true)}>Quero só o Básico</button>
+          <a
+            href={pro.checkoutUrl}
+            data-checkout="vip"
+            onClick={(event) => { event.preventDefault(); goToCheckout(pro.checkoutUrl); }}
+            className="group mt-8 flex min-h-16 w-full items-center justify-center gap-2 rounded-2xl bg-[#06a742] px-6 py-4 text-center text-lg font-extrabold text-white shadow-[0_14px_30px_-8px_rgba(6,167,66,.6)] transition hover:-translate-y-0.5 hover:brightness-105"
+          >
+            QUERO O PLANO COMPLETO <span className="transition group-hover:translate-x-1" aria-hidden>➔</span>
+          </a>
+          <p className="mt-3 text-center text-xs text-[var(--lp-body)]">🔒 Compra segura · 🛡️ Garantia de {offer.guaranteeDays} dias · ⚡ Acesso imediato</p>
         </div>
 
-        {/* BLOCO 2 — PLANO COMPLETO */}
-        <div className="plan vip reveal delay-1">
-          <span className="ribbon">⭐ O mais escolhido</span>
-          <h3>{full.name}</h3>
-          <p className="psub">{full.tagline}</p>
-          <DeviceDuo className="plan-mockup" />
-          <div className="price-row">
-            <span className="anchor">Tudo do Básico + prática completa por</span>
-            <span className="price">{brl(full.priceCents)}</span>
+        {/* BÁSICO — primeiro, recua */}
+        <div className="rv rv-l order-1 rounded-[1.75rem] border-2 border-white/20 bg-white/10 p-6 text-white backdrop-blur-sm sm:p-7">
+          <div className="text-center">
+            <h3 className="text-2xl">{entry.name}</h3>
+            <p className="mt-1 text-sm text-white/70">{entry.tagline}</p>
+            <p className="mt-5 text-4xl font-bold leading-none">{brl(entry.priceCents)}</p>
+            <p className="mt-2 text-xs text-white/70">pagamento único · sem mensalidade</p>
           </div>
-          <div className="installment">pagamento <b>único</b> · sem mensalidade</div>
-          <ul>
-            {full.includes.map((item) => <li key={item} className="yes"><span className="ic">✓</span><span>{item}</span></li>)}
+          <ul className="mt-6 space-y-2.5 text-sm">
+            {entry.includes.map((t) => <li key={t} className="flex items-start gap-2.5"><Check ok />{t}</li>)}
           </ul>
-          <a href={full.checkoutUrl} data-checkout="vip" className="btn btn-buy btn-lg btn-block" onClick={(event) => { event.preventDefault(); goToCheckout(full.checkoutUrl); }}>
-            Quero o Plano Completo <span className="arrow">➔</span>
-          </a>
-          <div className="offer-secure"><span>🔒 Compra 100% segura</span><span>•</span><span>🛡️ Garantia de {offer.guaranteeDays} dias</span><span>•</span><span>⚡ Acesso imediato</span></div>
+          <ul className="mt-4 space-y-2.5 border-t border-white/15 pt-4 text-sm text-white/60">
+            {proExtras.map((t) => <li key={t} className="flex items-start gap-2.5"><Check ok={false} />{t}</li>)}
+          </ul>
+          <button type="button" onClick={() => setOpen(true)} className="mt-7 flex min-h-12 w-full items-center justify-center rounded-2xl border-2 border-white/50 px-5 py-3 text-center text-sm font-bold text-white transition hover:bg-white/10">
+            COMEÇAR COM O BÁSICO
+          </button>
         </div>
       </div>
 
-      <dialog ref={dialog} className="downsell-modal" aria-labelledby="downsell-title" onClose={() => setOpen(false)} onClick={(event) => { if (event.target === dialog.current) setOpen(false); }}>
-        <div className="downsell-box">
-          <button type="button" className="close" aria-label="Fechar" onClick={() => setOpen(false)}>×</button>
-          <p className="dtag">Espere! Uma oferta só pra você</p>
-          <h3 id="downsell-title">Leve o Plano Completo por menos que o Básico</h3>
-          <p className="dtext">Questões explicadas, fila “Revisar novamente” e progresso por área — o pacote inteiro, por um preço especial.</p>
-          <DeviceDuo className="dmockup" />
-          <div className="dprice"><s>{brl(full.priceCents)}</s>{brl(downsell.priceCents)}</div>
-          <a href={downsell.checkoutUrl} data-checkout="downsell" className="btn btn-buy btn-block" onClick={(event) => { event.preventDefault(); goToCheckout(downsell.checkoutUrl); }}>
-            Sim, quero o Completo por {brl(downsell.priceCents)} <span className="arrow">➔</span>
+      <dialog ref={dialog} className="ds-modal" aria-labelledby="downsell-title" onClose={() => setOpen(false)} onClick={(event) => { if (event.target === dialog.current) setOpen(false); }}>
+        <div className="relative p-6 text-center sm:p-8">
+          <button type="button" onClick={() => setOpen(false)} aria-label="Fechar" className="absolute right-4 top-3 text-3xl leading-none text-[var(--lp-body)]">×</button>
+          <p className="text-xs font-extrabold uppercase tracking-[.14em] text-[var(--lp-hl-deep)]">Espere! Uma oferta só pra você</p>
+          <h3 className="mt-2 text-2xl leading-tight">Leve o {pro.name} por menos que o Básico</h3>
+          <p className="mt-2 text-sm leading-relaxed text-[var(--lp-body)]">Questões explicadas, fila “Revisar novamente”, progresso por área e busca imediata — o pacote inteiro, por um preço especial.</p>
+          <div className="plan-complete-visual !min-h-0 !py-4" aria-hidden><PlanPhones small /></div>
+          <p className="mt-4 text-4xl font-extrabold tracking-[-.02em] text-[#06a742]"><s className="mr-2 text-lg font-bold text-[hsl(348,76%,46%)]">{brl(pro.priceCents)}</s>{brl(downsell.priceCents)}</p>
+          <a
+            href={downsell.checkoutUrl}
+            data-checkout="downsell"
+            onClick={(event) => { event.preventDefault(); goToCheckout(downsell.checkoutUrl); }}
+            className="group mt-5 flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-[#06a742] px-5 py-3 text-center font-extrabold text-white shadow-[0_14px_30px_-8px_rgba(6,167,66,.6)] transition hover:brightness-105"
+          >
+            SIM, QUERO O COMPLETO POR {brl(downsell.priceCents)} <span aria-hidden>➔</span>
           </a>
-          <a href={basic.checkoutUrl} data-checkout="basico" className="refuse" onClick={(event) => { event.preventDefault(); goToCheckout(basic.checkoutUrl); }}>
-            Não, quero só o Básico por {brl(basic.priceCents)}
+          <a
+            href={entry.checkoutUrl}
+            data-checkout="basico"
+            onClick={(event) => { event.preventDefault(); goToCheckout(entry.checkoutUrl); }}
+            className="mt-4 block text-sm text-[var(--lp-body)] underline"
+          >
+            Não, quero só o Básico por {brl(entry.priceCents)}
           </a>
         </div>
       </dialog>
