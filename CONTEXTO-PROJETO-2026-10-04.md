@@ -168,6 +168,18 @@ Banco de produção hoje: 1 usuário (a conta demo), 1 compra (a demo), 1 direit
 ### Risco ainda não verificado
 - **E-mail de confirmação do cadastro.** O app exige confirmar o e-mail antes de vincular a compra. O SMTP padrão do Supabase tem limite baixíssimo de envio e, em projetos novos, só entrega para e-mails da própria equipe. Sem SMTP próprio, o comprador pode nunca receber a confirmação → nunca libera. Conferir em Auth → SMTP no painel do Supabase.
 
+### ✅ Corrigido em 04/10/2026 (mesma sessão, ~07h40)
+| Item | O que foi feito | Como foi conferido |
+|---|---|---|
+| Webhook | Bug corrigido: a liberação agora depende do **evento** `purchase_approved`, não de `data.status` (a Cakto manda `waiting_payment` mesmo aprovando) · função publicada (`verify_jwt: false`) | `supabase functions list` → ACTIVE |
+| Cakto → Supabase | Webhook **71949** "Revisão Técnico Enfermagem - Acesso" (aprovada, reembolso, chargeback), só este produto · segredo gravado em `CAKTO_WEBHOOK_SECRET` | Evento de teste chegou, autenticou e foi gravado; o banco recusou a oferta fictícia do teste, como deve |
+| Cliente `7oesARk` | Compra aplicada via `apply_purchase_event` → direito **ativo**, plano acesso-completo | Vincula sozinho quando ele criar a conta com o e-mail da compra |
+| Produto Cakto | Página de vendas → `enfermagem-app-xi.vercel.app` · link de acesso por e-mail → `/cadastro` · garantia 15 · suporte | Relido pela API |
+| Oferta `cm5op9a` | Renomeada para "Plano Completo" | Relida pela API |
+| Checkout | Cores da página, aviso "use o MESMO e-mail" acima do formulário, vantagens (acesso imediato, garantia 15 dias), lista "O que você recebe", botão verde | Aberto no Chromium (390px e 1366px), sem erro de JS |
+
+Ainda no painel da Cakto (a API não grava): **imagem do produto** (`public/checkout/produto-1000.jpg`), **banner do topo do checkout** (`public/checkout/topo-checkout.jpg`; pela API a imagem sai quebrada), **PIX como padrão**, conferir qual entrega está marcada (Acesso por e-mail), categoria, e o **popup de saída** com o downsell (aprovado, não aplicado — falta confirmar o valor do campo de ação).
+
 ---
 
 ## 7. Qualidade técnica (rodado hoje)
@@ -186,12 +198,10 @@ Documentação desatualizada: o `README.md` ainda fala em "16 temas e 32 questõ
 ## 8. Plano de ação em ordem
 
 ### Agora (receita parada sem isto)
-1. Publicar `purchase-webhook` no projeto `mofivnzdampnhsqvsthz` (`verify_jwt = false`).
-2. Criar o webhook na Cakto → `https://mofivnzdampnhsqvsthz.supabase.co/functions/v1/purchase-webhook?provider=cakto`, eventos `purchase_approved`, `refund`, `chargeback`, só para este produto; gravar o secret devolvido em `CAKTO_WEBHOOK_SECRET`.
-3. Liberar manualmente o pedido `7oesARk` (via `apply_purchase_event`) e avisar o cliente pelo WhatsApp/e-mail com o link de `/cadastro`.
-4. Na Cakto: entrega por e-mail com link `https://enfermagem-app-xi.vercel.app/cadastro`, página de vendas corrigida.
-5. Configurar SMTP próprio no Supabase e testar o cadastro com um e-mail de fora da equipe.
-6. Testar ponta a ponta com o evento de teste da Cakto.
+1. ~~Publicar `purchase-webhook`~~ ✅ · ~~webhook na Cakto + secret~~ ✅ · ~~liberar `7oesARk`~~ ✅ · ~~página de vendas e link de entrega na Cakto~~ ✅
+2. **Avisar o cliente do pedido `7oesARk`** pelo WhatsApp/e-mail com o link `https://enfermagem-app-xi.vercel.app/cadastro` (criar conta com o e-mail da compra).
+3. **Configurar SMTP próprio no Supabase** e testar o cadastro com um e-mail de fora da equipe (sem isso a confirmação de e-mail pode não chegar).
+4. Fazer uma compra real de teste (ex.: downsell R$ 32,90 com reembolso depois) para provar o caminho completo com um pedido de verdade.
 
 ### Em seguida (conversão)
 7. Personalizar o checkout da Cakto (cores e identidade da página, imagem do produto, categoria Educação, textos) — skill `criar-produto-cakto`.
