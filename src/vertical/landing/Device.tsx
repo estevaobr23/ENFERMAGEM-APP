@@ -46,6 +46,22 @@ export function Device({
   );
 }
 
+/** Notebook 16:10 em CSS puro: tampa com borda fina, câmera, reflexo e base de alumínio. */
+export function Laptop({ children, label, className = "" }: { children: ReactNode; label?: string; className?: string }) {
+  return (
+    <div className={`lt ${className}`} role={label ? "img" : undefined} aria-label={label}>
+      <div className="lt-lid">
+        <span className="lt-cam" aria-hidden />
+        <div className="lt-screen">
+          {children}
+          <div className="lt-glare" aria-hidden />
+        </div>
+      </div>
+      <div className="lt-base" aria-hidden />
+    </div>
+  );
+}
+
 /** Cartão de vidro flutuante: sempre um RESULTADO, nunca um recurso. */
 export function GlassNote({ icon, title, text, className = "", tone = "brand" }: { icon: ReactNode; title: string; text?: string; className?: string; tone?: "brand" | "buy" | "bad" }) {
   const bg = tone === "buy" ? "#06a742" : tone === "bad" ? "hsl(354,76%,50%)" : "var(--lp-auth)";

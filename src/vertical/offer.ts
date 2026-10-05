@@ -36,7 +36,7 @@ export type PlanOffer = {
   includes: string[];
 };
 
-export type Bonus = { title: string; text: string; priceCents: number | null };
+export type Bonus = { title: string; text: string; priceCents: number | null; mockupSrc: string; mockupAlt: string };
 
 export const offer = {
   productName: "Revisão Visual para Concurso de Técnico de Enfermagem",
@@ -49,33 +49,37 @@ export const offer = {
     {
       key: "basico",
       name: "Plano Básico",
-      tagline: "As 8 áreas com mapas mentais e resumos visuais",
-      priceCents: 3790,
+      tagline: "O conteúdo das 8 áreas, ilustrado e resumido",
+      priceCents: 2790,
       compareAtCents: null,
       installments: null,
       checkoutUrl: process.env.NEXT_PUBLIC_CHECKOUT_URL_BASICO || "https://pay.cakto.com.br/i85bp2f",
       recommended: false,
       includes: [
         "As 8 áreas do concurso organizadas",
-        "Mapa mental de cada tema",
-        "Resumo visual com os pontos-chave",
-        "Fonte de cada conteúdo indicada",
+        "Prancha ilustrada de cada tema",
+        "Conteúdo de cada tema dividido em partes curtas",
+        "Pegadinhas da banca e resumo final de cada tema",
+        "Mapa geral com todas as matérias",
+        "Fonte oficial de cada conteúdo",
       ],
     },
     {
       key: "acesso-completo",
       name: "Plano Completo",
-      tagline: "Mapas mentais, resumos visuais e questões comentadas",
-      priceCents: 4790,
+      tagline: "O conteúdo + questões comentadas e revisão dos seus erros",
+      priceCents: 3790,
       compareAtCents: null,
       installments: null,
       checkoutUrl: process.env.NEXT_PUBLIC_CHECKOUT_URL_ACESSO_COMPLETO || "https://pay.cakto.com.br/cm5op9a",
       recommended: true,
       includes: [
         "As 8 áreas do concurso organizadas",
-        "Mapa mental de cada tema",
-        "Resumo visual com os pontos-chave",
-        "Fonte de cada conteúdo indicada",
+        "Prancha ilustrada de cada tema",
+        "Conteúdo de cada tema dividido em partes curtas",
+        "Pegadinhas da banca e resumo final de cada tema",
+        "Mapa geral com todas as matérias",
+        "Fonte oficial de cada conteúdo",
         "Questões comentadas em cada tema",
         "Fila “Revisar novamente” com seus erros",
         "Progresso e acerto por área",
@@ -83,14 +87,36 @@ export const offer = {
       ],
     },
   ] satisfies PlanOffer[],
-  /** oferta do modal que aparece ao escolher o básico: o Completo por menos */
+  /** oferta do modal que aparece ao escolher o básico: o Completo por pouco a mais que o Básico */
   downsell: {
     name: "Plano Completo — oferta especial",
-    priceCents: 3290,
+    priceCents: 2990,
     checkoutUrl: process.env.NEXT_PUBLIC_CHECKOUT_URL_DOWNSELL || "https://pay.cakto.com.br/c95ejen",
   },
-  /** TODO_OWNER_CONFIGURATION: bônus ainda não definidos — seção some enquanto vazio */
-  bonuses: [] as Bonus[],
+  /** seção de bônus some enquanto vazio. Só publicar com os materiais prontos para entrega. */
+  bonuses: [
+    {
+      title: "Guia de Cálculos de Enfermagem — Passo a Passo",
+      text: "Os principais cálculos com exemplos e exercícios resolvidos passo a passo.",
+      priceCents: null,
+      mockupSrc: "/landing/mockups/guia-calculos.webp",
+      mockupAlt: "Mockup do Guia de Cálculos de Enfermagem — Passo a Passo",
+    },
+    {
+      title: "Checklist da Reta Final — 7 Dias Antes da Prova",
+      text: "O que fazer em cada um dos últimos 7 dias, para não revisar no caos.",
+      priceCents: null,
+      mockupSrc: "/landing/mockups/checklist-reta-final.webp",
+      mockupAlt: "Mockup do Checklist da Reta Final — 7 Dias Antes da Prova",
+    },
+    {
+      title: "Guia de Prefixos, Sufixos e Termos da Enfermagem",
+      text: "Os termos técnicos que mais aparecem nos enunciados, para entender e memorizar.",
+      priceCents: null,
+      mockupSrc: "/landing/mockups/guia-termos.webp",
+      mockupAlt: "Mockup do Guia de Prefixos, Sufixos e Termos da Enfermagem",
+    },
+  ] as Bonus[],
 };
 
 export const supportEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL ?? "";

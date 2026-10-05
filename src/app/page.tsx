@@ -7,10 +7,11 @@ import { CATEGORIES, publishedCounts } from "@/vertical/content";
 import { offer } from "@/vertical/offer";
 import { vertical } from "@/vertical/config";
 import { UtmCapture } from "@/vertical/landing/CheckoutButton";
-import { Device, GlassNote, Print } from "@/vertical/landing/Device";
+import { GlassNote } from "@/vertical/landing/Device";
 import { PlanCards } from "@/vertical/landing/PlanCards";
 import { UtmifyPixel } from "@/vertical/landing/UtmifyPixel";
-import { DEMO, ExplodeFila, ExplodeMapa, ExplodeQuestoes, ExplodeResumo, SceneMaterias, SceneMistake, ScenePdf, SceneQuiz, SceneTopic } from "@/vertical/landing/scenes";
+import { DEMO, SceneMaterias, SceneMistake, ScenePdf, SceneQuiz, SceneTemaDesktop, SceneTopic, TemaPartLaptop } from "@/vertical/landing/scenes";
+import { visualAssetsForTopic } from "@/vertical/content/visual-assets";
 import "@/vertical/landing/landing.css";
 
 /*
@@ -25,6 +26,32 @@ const AREAS = CATEGORIES.map((c) => (c.shortTitle === "Urgência" ? "Urgência e
 const areaList = `${AREAS.slice(0, -1).join(", ")} e ${AREAS[AREAS.length - 1]}`;
 const brl = (cents: number) => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(cents / 100);
 const CTA = "QUERO ACESSAR O APLICATIVO";
+
+// Partes do tema na seção 3. Os grupos dizem em quantos temas cada parte existe,
+// contado no conteúdo publicado — nunca "em todos" sem ser verdade.
+const PUBLISHED = CATEGORIES.flatMap((c) => c.topics.filter((t) => t.status === "published"));
+const hasBlock = (t: (typeof PUBLISHED)[number], type: string) => t.sections.some((s) => s.blocks.some((b) => b.type === type));
+const inTopics = (n: number) => (n === PUBLISHED.length ? `Em todos os ${n} temas` : `Em ${n} dos ${PUBLISHED.length} temas`);
+const basicN = PUBLISHED.filter((t) => visualAssetsForTopic(t.slug).length && hasBlock(t, "traps") && t.keyPoints.length).length;
+const deepN = PUBLISHED.filter((t) => hasBlock(t, "steps") && hasBlock(t, "numbers") && hasBlock(t, "case")).length;
+const PART_GROUPS = [
+  {
+    title: inTopics(basicN),
+    parts: [
+      { part: "prancha" as const, alt: "Prancha ilustrada do tema Higiene das mãos no notebook, com zoom em cada um dos cinco momentos", title: "Prancha ilustrada", text: "O assunto inteiro numa ilustração, com cada ponto marcado no lugar onde acontece." },
+      { part: "resumo" as const, alt: "Resumo final do tema com os pontos-chave numerados", title: "O que levar para a prova", text: "O resumo final em pontos numerados, para reler em poucos minutos antes da prova." },
+      { part: "pegadinhas" as const, alt: "Pegadinhas da banca: a afirmação errada riscada, a correta e o raciocínio", title: "Pegadinhas da banca", text: "O que a banca costuma trocar, lado a lado com a versão certa e o porquê." },
+    ],
+  },
+  {
+    title: `E ${inTopics(deepN).toLowerCase()}, também`,
+    parts: [
+      { part: "passos" as const, alt: "Os cinco momentos em passo a passo, cada um com o porquê e quem executa", title: "Passo a passo com o porquê", text: "Cada etapa explicada, com o motivo e quem faz: técnico, enfermeiro ou equipe." },
+      { part: "numeros" as const, alt: "Quadro de números que caem na prova: tempos, percentuais e indicadores", title: "Números que caem", text: "Tempos, doses, prazos e percentuais que a prova cobra, em destaque." },
+      { part: "caso" as const, alt: "Situação-problema no formato da prova: toque em Ver resposta comentada e a resposta abre", title: "Situação-problema comentada", text: "Um caso no formato da prova, com a resposta e o raciocínio passo a passo." },
+    ],
+  },
+];
 
 // ───────────────────────────── peças da página ─────────────────────────────
 
@@ -80,7 +107,10 @@ type Receive = { slug: string; title: string; text: string; tone?: "auth" | "str
 const TONES: (Receive["tone"])[] = ["auth", undefined, "alert", undefined, "struct", undefined, "auth", undefined];
 const RECEIVE: Receive[] = CATEGORIES.map((c, i) => {
   const topics = c.topics.filter((t) => t.status === "published");
-  const sample = topics.slice(0, 2).map((t) => t.title.split(":")[0].trim()).join(", ");
+  const first = topics.slice(0, 2);
+  const short = first.map((t) => t.title.split(":")[0].trim());
+  // dois temas com o mesmo nome antes dos dois-pontos apareciam repetidos
+  const sample = (short[0] === short[1] ? first.map((t) => t.title) : short).join(", ");
   return { slug: c.slug, title: c.shortTitle, text: `${topics.length} ${topics.length === 1 ? "tema" : "temas"} · ${sample}${topics.length > 2 ? "…" : ""}`, tone: TONES[i] };
 });
 
@@ -117,24 +147,27 @@ export default function SalesPage() {
             </p>
             <Stats className="mt-5 text-[var(--lp-alert)]" />
 
-            <div className="relative mx-auto mt-10 flex w-fit justify-center">
-              <Device width="min(70vw, 18rem)" label="Painel do aplicativo aberto no celular, com o próximo tema para revisar">
-                <Print src="/landing/app/m-dash.webp" alt="Painel do aplicativo" priority />
-              </Device>
-              <div className="glass float-a -right-10 top-10 w-[8.4rem] rotate-2 p-2.5 text-left sm:-right-28 sm:w-44 sm:p-3.5">
-                <p className="text-[9px] font-bold uppercase tracking-wide text-[var(--lp-body)] sm:text-[10px]">Questões comentadas</p>
-                <p className="mt-1 text-lg font-extrabold leading-none sm:text-2xl">{counts.questions} no app</p>
-                <div className="mt-2 flex h-6 items-end gap-1">
-                  {[40, 55, 45, 70, 60, 90, 80].map((h, i) => <span key={i} style={{ height: `${h}%` }} className="flex-1 rounded-sm bg-[var(--lp-auth)]" />)}
-                </div>
-              </div>
-              <GlassNote tone="buy" icon="✓" title="Você acertou!" text="A explicação aparece na hora" className="float-b -left-10 bottom-[24%] w-[10.5rem] -rotate-2 text-left sm:-left-32 sm:w-60" />
-              <GlassNote icon="🧭" title="Mapa mental do tema" text={DEMO.topic} className="float-c -right-8 bottom-[6%] w-[10.5rem] rotate-1 text-left sm:-right-28 sm:w-60" />
+            <div className="relative mx-auto mt-8 w-full max-w-[68rem] sm:mt-10">
+              <Image
+                src="/landing/mockups/oferta-completa-frontal.webp"
+                alt="Aplicativo Revisão Técnico aberto no notebook e no celular, acompanhado dos três guias bônus"
+                width={1800}
+                height={1350}
+                sizes="(max-width: 640px) calc(100vw - 2rem), min(94vw, 1088px)"
+                className="offer-hero-mockup h-auto w-full"
+                preload
+              />
             </div>
 
             <div className="mt-12 flex flex-col items-center gap-3">
               <CtaToPlans variant="light" />
-              <p className="text-sm text-white/75">Pagamento único · sem mensalidade · acesso no celular e no computador</p>
+              {/* linha de entrega (padrão low ticket): WhatsApp + e-mail com os ícones padronizados */}
+              <p className="mx-auto mt-2 max-w-[22.5rem] text-center text-[15px] font-semibold leading-[1.8] text-[hsl(200,50%,95%)]">
+                Você recebe o acesso na hora, direto no seu{" "}
+                <span className="whitespace-nowrap"><Image src="/landing/icon-wpp.webp" alt="WhatsApp" width={20} height={20} className="mr-[3px] inline-block align-[-5px]" /><b className="font-bold text-white">WhatsApp</b></span>{" "}
+                e no seu{" "}
+                <span className="whitespace-nowrap"><Image src="/landing/icon-email.webp" alt="E-mail" width={20} height={20} className="mr-[3px] inline-block align-[-5px]" /><b className="font-bold text-white">e-mail</b></span>
+              </p>
             </div>
           </div>
         </section>
@@ -166,26 +199,32 @@ export default function SalesPage() {
           </div>
         </section>
 
-        {/* 3. O QUE TEM EM CADA TEMA — um mockup explodido por recurso */}
+        {/* 3. O QUE TEM EM CADA TEMA — a tela real do tema no notebook + um recorte real de cada parte */}
         <section className="surf surf-neutral px-4 py-20">
-          <div className="mx-auto max-w-5xl">
-            <SectionHead eyebrow="O que tem em cada tema" title={<>Cada tema vem com <span className="hl">mapa mental, resumo visual e questões comentadas</span></>} text={`São ${counts.topics} temas das ${counts.categories} áreas, sempre com a fonte oficial indicada.`} />
-            <div className="mt-14 grid gap-8 sm:grid-cols-2">
-              {[
-                { mock: <ExplodeMapa />, title: "Mapa mental", text: "O assunto inteiro em uma imagem: o centro e os pontos que a prova cobra." },
-                { mock: <ExplodeResumo />, title: "Resumo visual", text: "Os pontos-chave numerados, para reler em poucos minutos." },
-                { mock: <ExplodeQuestoes />, title: "Questões comentadas", text: "No estilo da prova, com a explicação logo depois da resposta." },
-                { mock: <ExplodeFila />, title: "Revisar novamente", text: "O que você errou volta para uma fila só sua." },
-              ].map((c, i) => (
-                <article key={c.title} className={`rv rv-d${(i % 2) + 1} overflow-hidden rounded-3xl border-2 border-[var(--lp-auth-ink)]/10 bg-gradient-to-b from-[var(--lp-warm)] to-white`}>
-                  {c.mock}
-                  <div className="px-6 pb-7 text-center">
-                    <h3 className="text-xl">{c.title}</h3>
-                    <p className="mt-1.5 text-sm leading-relaxed text-[var(--lp-body)]">{c.text}</p>
-                  </div>
-                </article>
-              ))}
-            </div>
+          <div className="mx-auto max-w-6xl">
+            <SectionHead eyebrow="O que tem em cada tema" title={<>Abriu o tema, <span className="hl">o assunto já está pronto para revisar</span></>} text={`Este é um dos ${counts.topics} temas, do jeito que aparece no aplicativo: ilustrado, dividido em partes curtas e com a fonte oficial indicada.`} />
+            <div className="rv mt-12"><SceneTemaDesktop /></div>
+
+            {PART_GROUPS.map((g) => (
+              <div key={g.title} className="mt-16">
+                <p className="rv text-center text-xs font-bold uppercase tracking-[.2em] text-[var(--lp-struct-deep)]">{g.title}</p>
+                <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {g.parts.map((p, i) => (
+                    <article key={p.title} className={`rv rv-d${(i % 3) + 1} tema-card`}>
+                      <div className="tema-card__shot"><TemaPartLaptop part={p.part} label={p.alt} /></div>
+                      <div className="px-6 pb-7 pt-4">
+                        <h3 className="text-xl">{p.title}</h3>
+                        <p className="mt-1.5 text-[15px] leading-relaxed text-[var(--lp-body)]">{p.text}</p>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            ))}
+
+            <p className="rv mx-auto mt-12 max-w-3xl rounded-2xl border-2 border-dashed border-[var(--lp-auth-ink)]/15 bg-white/70 px-6 py-5 text-center text-[15px] leading-relaxed text-[var(--lp-body)]">
+              <b className="text-[var(--lp-ink)]">E ainda, conforme o tema:</b> definições na letra da norma, tabelas comparativas, faça × não faça, conexões com outros temas e a fonte oficial de cada parte.
+            </p>
           </div>
         </section>
 
@@ -222,7 +261,7 @@ export default function SalesPage() {
         <section className="surf surf-neutral px-4 py-20">
           <div className="mx-auto max-w-3xl text-center">
             <div className="rv">
-              <p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--lp-struct-deep)]">Questões comentadas</p>
+              <p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--lp-struct-deep)]">Questões comentadas · Plano Completo</p>
               <h2 className="mt-3 text-[2.1rem] leading-[1.08] sm:text-5xl">Pratique cada tema com <span className="hl">questões comentadas</span></h2>
               <span className="lp-rule" aria-hidden />
               <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-[var(--lp-body)]">
@@ -234,13 +273,16 @@ export default function SalesPage() {
               <GlassNote tone="buy" icon="✓" title="Você acertou!" text="A explicação aparece na hora" className="float-a -left-10 top-[6%] w-[11rem] -rotate-2 text-left sm:-left-56 sm:w-60" />
               <GlassNote icon="◎" title={`${DEMO.questionCount} questões neste tema`} text={DEMO.topic} className="float-b -right-10 top-[44%] w-[10rem] rotate-2 text-left sm:-right-52 sm:w-56" />
             </div>
-            <div className="rv rv-pop tag-card tag-card--hl mx-auto mt-12 flex max-w-md items-center gap-4 rounded-2xl bg-white p-5 text-left">
-              <div className="shrink-0 text-center">
-                <p className="text-xs font-semibold text-[var(--lp-body)]">no aplicativo</p>
-                <p className="text-3xl font-extrabold text-[#06a742]">{counts.questions}</p>
-              </div>
-              <p className="text-sm leading-snug">questões com a <b className="text-[var(--lp-hl-deep)]">explicação da resposta</b>, em todas as {counts.categories} áreas.</p>
-            </div>
+            {/* o valor é o feedback imediato; a quantidade fica no subtítulo */}
+            <ol className="rv mx-auto mt-12 grid max-w-xl grid-cols-3 gap-3">
+              {[["1", "Marque", "a alternativa"], ["2", "Confira", "certo ou errado na hora"], ["3", "Entenda", "a explicação logo abaixo"]].map(([n, a, b]) => (
+                <li key={a} className="tag-card rounded-2xl bg-white p-3 text-center">
+                  <span className="mx-auto flex h-7 w-7 items-center justify-center rounded-full bg-[var(--lp-auth)] text-sm font-extrabold text-white">{n}</span>
+                  <p className="mt-2 text-sm font-extrabold text-[var(--lp-auth)]">{a}</p>
+                  <p className="mt-0.5 text-xs text-[var(--lp-body)]">{b}</p>
+                </li>
+              ))}
+            </ol>
             <div className="rv mt-10"><CtaToPlans /></div>
           </div>
         </section>
@@ -299,7 +341,7 @@ export default function SalesPage() {
             </div>
             <div className="order-1 text-center lg:order-2 lg:text-left">
               <div className="rv">
-                <p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--lp-auth-deep)]">Revisar novamente</p>
+                <p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--lp-auth-deep)]">Revisar novamente · Plano Completo</p>
                 <h2 className="mt-3 text-[2.1rem] leading-[1.08] sm:text-5xl">O que você errou <span className="hl">volta para revisão</span></h2>
                 <p className="mx-auto mt-5 max-w-lg text-lg leading-relaxed text-[var(--lp-auth-ink)]/85 lg:mx-0">Errou uma questão? Você vê a alternativa certa e a explicação, e o tema entra na fila Revisar novamente. Ele sai da fila quando você acertar.</p>
               </div>
@@ -337,31 +379,34 @@ export default function SalesPage() {
           </div>
         </section>
 
-        {/* 9. TUDO EM UM SÓ APLICATIVO — no lugar dos bônus (não há bônus fictício) */}
-        <section className="surf surf-struct px-4 py-20">
-          <div className="mx-auto max-w-3xl">
-            <SectionHead eyebrow="Tudo em um só aplicativo" title={<><span className="hl">{counts.categories} áreas, {counts.topics} temas e {counts.questions} questões</span> no seu celular</>} text="Sem bônus de enfeite: o que você recebe é o aplicativo completo, com o conteúdo revisado na fonte oficial." />
-            <div className="rv bonus-final mx-auto mt-12 max-w-2xl rounded-[1.5rem] p-7 text-center">
-              <div className="grid grid-cols-3 gap-3">
-                {[[counts.categories, "áreas"], [counts.topics, "temas"], [counts.questions, "questões"]].map(([n, l]) => (
-                  <div key={l as string}>
-                    <p className="text-4xl font-extrabold tracking-[-.03em] text-[var(--lp-auth)]">{n}</p>
-                    <p className="text-sm font-semibold text-[var(--lp-body)]">{l}</p>
-                  </div>
+        {/* 9. BÔNUS — some enquanto offer.bonuses estiver vazio */}
+        {offer.bonuses.length > 0 && (
+          <section id="bonus" className="surf surf-struct scroll-mt-20 px-4 py-20">
+            <div className="mx-auto max-w-5xl">
+              <SectionHead eyebrow="Bônus" title={<>Além do aplicativo, você leva <span className="hl">{offer.bonuses.length} guias para a reta final</span></>} text="Materiais para os pontos que mais travam: as contas, os últimos dias antes da prova e os termos técnicos." />
+              <ul className="mt-12 grid gap-5 md:grid-cols-3">
+                {offer.bonuses.map((b, i) => (
+                  <li key={b.title} className={`rv rv-pop rv-d${(i % 3) + 1} bonus-card bonus-card--${i + 1} tag-card flex flex-col rounded-3xl bg-white p-6 text-left`}>
+                    <div className="bonus-mockup-wrap">
+                      <Image src={b.mockupSrc} alt={b.mockupAlt} width={900} height={900} sizes="(max-width: 767px) 82vw, 30vw" className="h-auto w-full" />
+                    </div>
+                    <span className="w-fit rounded-full bg-[var(--lp-alert)] px-3 py-1 text-xs font-extrabold tracking-wide text-[var(--lp-auth-ink)]">BÔNUS {String(i + 1).padStart(2, "0")}</span>
+                    <h3 className="mt-4 text-xl leading-snug">{b.title}</h3>
+                    <p className="mt-2 text-[15px] leading-relaxed text-[var(--lp-body)]">{b.text}</p>
+                  </li>
                 ))}
-              </div>
-              <p className="mt-5 text-base text-[var(--lp-body)]">Cada tema com mapa mental, resumo visual, pegadinhas de prova e questões comentadas.</p>
-              <div className="mt-6 flex justify-center"><CtaToPlans variant="grad" /></div>
+              </ul>
+              <div className="rv mt-12 flex justify-center"><CtaToPlans variant="grad" /></div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* 10. PLANOS */}
         <section id="planos" className="surf surf-auth scroll-mt-16 px-4 py-20">
           <div className="mx-auto max-w-5xl">
             <SectionHead eyebrow="Planos" title={<>Escolha seu <span className="hl">acesso</span></>} text="Pagamento único pelo checkout seguro da Cakto. Sem mensalidade." />
             <PlanCards />
-            <p className="rv mx-auto mt-10 max-w-xl text-center text-sm text-white/75">Depois do pagamento, você cria sua conta com o mesmo e-mail da compra e já entra no aplicativo.</p>
+            <p className="rv mx-auto mt-10 max-w-xl text-center text-sm text-white/75">Depois do pagamento, é só entrar na Área do aluno com o mesmo e-mail da compra — sem senha.</p>
           </div>
         </section>
 
@@ -385,9 +430,9 @@ export default function SalesPage() {
             <div className="mt-12 space-y-3">
               {[
                 ["O que tem dentro de cada tema?", "Mapa mental do assunto, resumo visual com os pontos-chave, pegadinhas de prova, questões comentadas e a fonte oficial de onde o conteúdo saiu."],
-                ["Preciso instalar alguma coisa?", "Não. O aplicativo abre no navegador do celular ou do computador, com seu e-mail e senha. O progresso fica salvo nos dois."],
-                ["Como recebo o acesso depois de comprar?", "Você cria sua conta com o mesmo e-mail usado na compra e confirma esse e-mail. O acesso é liberado automaticamente."],
-                ["Qual a diferença entre o Básico e o Completo?", "O Básico traz as 8 áreas com mapas mentais, resumos visuais e as fontes. O Completo soma as questões comentadas, a fila Revisar novamente, o progresso por área e a busca imediata."],
+                ["Preciso instalar alguma coisa?", "Não. O aplicativo abre no navegador do celular ou do computador, e você entra só com o e-mail da compra. O progresso fica salvo nos dois."],
+                ["Como recebo o acesso depois de comprar?", "Entre na Área do aluno e digite o mesmo e-mail usado na compra. Não tem senha nem confirmação: o acesso já está liberado."],
+                ["Qual a diferença entre o Básico e o Completo?", "O Básico traz o conteúdo das 8 áreas: prancha ilustrada, partes curtas, pegadinhas da banca, resumo final e a fonte de cada tema. O Completo soma as questões comentadas, a fila Revisar novamente, o progresso e acerto por área e a busca em todo o conteúdo."],
                 ["É mensalidade?", "Não. É pagamento único."],
                 ["O aplicativo garante aprovação?", "Não. Ele organiza e facilita a sua revisão, mas o resultado depende do seu estudo. O conteúdo é educacional e não substitui protocolos clínicos."],
               ].map(([q, a], i) => (

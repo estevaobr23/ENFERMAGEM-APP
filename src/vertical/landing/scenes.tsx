@@ -1,6 +1,7 @@
 import Image from "next/image";
+import type React from "react";
 import { findTopic } from "@/vertical/content";
-import { Device } from "./Device";
+import { Device, Laptop } from "./Device";
 
 /*
  * Cenas que rodam DENTRO do celular. Tudo em CSS (landing.css): nada de vídeo,
@@ -181,73 +182,106 @@ export function SceneMistake({ width }: { width?: string }) {
   );
 }
 
-// ─────────────── MOCKUPS EXPLODIDOS (seção "O que é") ───────────────
-// Um celular pequeno com a tela real + as peças daquele recurso saltando da tela.
+// ─────────────── CENA E — o tema aberto no computador, percorrendo as partes — ciclo 20s ───────────────
+// Prints reais da tela do tema (1440×900 @2x, conta de teste local). O índice
+// lateral do próprio app acende a parte atual em cada quadro.
 
-export function ExplodeMapa() {
-  return (
-    <div className="xp">
-      <SceneTopic width="10.5rem" still />
-      {MAP.blocks.map((b, i) => (
-        <span key={b.title} className={`xp-part xp-chip xp-chip--${b.tone} ${["float-a left-0 top-8 -rotate-6", "float-b right-0 top-20 rotate-6", "float-c left-2 bottom-10 rotate-3"][i]}`}>
-          {b.icon} {b.title}
-        </span>
-      ))}
-    </div>
-  );
-}
+const DESK_FRAMES = [
+  { src: "/landing/app/tema/desk-1.webp", label: "Prancha ilustrada" },
+  { src: "/landing/app/tema/desk-2.webp", label: "Passo a passo" },
+  { src: "/landing/app/tema/desk-3.webp", label: "Números que caem" },
+  { src: "/landing/app/tema/desk-4.webp", label: "Pegadinhas" },
+  { src: "/landing/app/tema/desk-5.webp", label: "Resumo final" },
+];
+const FRAME_S = 4;
 
-export function ExplodeResumo() {
+export function SceneTemaDesktop() {
+  const delay = (i: number) => ({ animationDelay: `${i * FRAME_S - 0.6}s` });
   return (
-    <div className="xp">
-      <Device width="10.5rem">
-        <div className="ui ui-app still">
-          <AppBar />
-          <div className="tp-kp tp-kp--full">
-            <p className="tp-map-label">O QUE LEVAR PARA A PROVA</p>
-            {topic.keyPoints.slice(0, 6).map((k, i) => <p key={k}><i>{i + 1}</i>{k}</p>)}
+    <div>
+      <Laptop label={`Tema ${topic.title} aberto no computador: prancha ilustrada, passo a passo, números que caem, pegadinhas e resumo final`}>
+        {DESK_FRAMES.map((f, i) => (
+          <div key={f.src} className={`lt-frame ${i === 0 ? "lt-frame--first" : ""}`} style={delay(i)}>
+            <Image src={f.src} alt="" fill sizes="(min-width: 1024px) 56rem, 92vw" className="object-cover object-top" />
           </div>
-        </div>
-      </Device>
-      <div className="xp-part float-a right-0 top-6 w-40 rounded-xl bg-white p-2.5 text-left rotate-3">
-        <p className="mb-1 text-[9px] font-bold uppercase tracking-wide text-[var(--lp-hl-deep)]">Pontos-chave</p>
-        {topic.keyPoints.slice(0, 3).map((k, i) => (
-          <p key={k} className="flex gap-1.5 text-[10px] leading-snug"><b className="text-[var(--lp-auth)]">{i + 1}</b><span className="line-clamp-1">{k}</span></p>
         ))}
-      </div>
-      <span className="xp-part float-b left-0 bottom-8 rounded-full bg-[var(--lp-alert)] px-3 py-1.5 text-xs font-extrabold text-[var(--lp-auth-ink)] -rotate-3">{topic.sections.length} seções · 1 tema</span>
+      </Laptop>
+      <ol className="mt-8 flex flex-wrap justify-center gap-2" aria-hidden>
+        {DESK_FRAMES.map((f, i) => (
+          <li key={f.label} className={`lt-cap ${i === 0 ? "lt-cap--first" : ""}`} style={delay(i)}>
+            <span>{String(i + 1).padStart(2, "0")}</span>{f.label}
+          </li>
+        ))}
+      </ol>
     </div>
   );
 }
 
-export function ExplodeQuestoes() {
+// ─────────────── CENA F — um notebook por parte do tema (cards da seção 3) ───────────────
+// Cada notebook mostra só a sua parte, com um movimento que prova aquela parte:
+// passeio pela prancha, rolagem pelo conteúdo, destaque em cada número, resposta abrindo.
+
+export type TemaPart = "prancha" | "resumo" | "pegadinhas" | "passos" | "numeros" | "caso";
+
+const SHOT = "/landing/app/tema";
+const PART_SHOTS = {
+  resumo: { w: 1400, h: 1227 },
+  pegadinhas: { w: 1400, h: 2037 },
+  passos: { w: 1400, h: 1371 },
+  numeros: { w: 1400, h: 889 },
+  caso: { w: 1400, h: 949 },
+} as const;
+
+/** Rola o recorte até o fim e volta; a distância sai da proporção da imagem × tela 16:10. */
+function PanShot({ part }: { part: "resumo" | "pegadinhas" | "passos" }) {
+  const { w, h } = PART_SHOTS[part];
+  const pan = Math.max(0, 1 - w / (1.6 * h)) * 100;
   return (
-    <div className="xp">
-      <SceneQuiz width="10.5rem" still />
-      <div className="xp-part float-a right-0 top-8 rounded-xl bg-[#e3f4ea] px-3 py-2 text-left rotate-3">
-        <p className="text-xs font-extrabold text-[#127a3e]">✓ Você acertou!</p>
-        <p className="text-[10px] text-[#2d5a40]">correção explicada na hora</p>
-      </div>
-      <span className="xp-part float-b left-0 bottom-10 flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--lp-auth)] text-xl font-black text-white -rotate-6">{CORRECT.label}</span>
+    <div className="lt-pan" style={{ "--pan": `-${pan.toFixed(1)}%` } as React.CSSProperties}>
+      <Image src={`${SHOT}/parte-${part}.webp`} alt="" width={w} height={h} sizes="(min-width: 1024px) 22rem, (min-width: 640px) 42vw, 84vw" className="block h-auto w-full" />
     </div>
   );
 }
 
-export function ExplodeFila() {
+function NumbersShot() {
+  const { w, h } = PART_SHOTS.numeros;
   return (
-    <div className="xp">
-      <Device width="10.5rem">
-        <div className="ui ui-app still">
-          <AppBar />
-          <ReviewList fresh={false} />
+    <div className="relative">
+      <Image src={`${SHOT}/parte-numeros.webp`} alt="" width={w} height={h} sizes="(min-width: 1024px) 22rem, (min-width: 640px) 42vw, 84vw" className="block h-auto w-full" />
+      <span className="lt-ring" aria-hidden />
+    </div>
+  );
+}
+
+function CaseShot() {
+  const { w, h } = PART_SHOTS.caso;
+  const sizes = "(min-width: 1024px) 22rem, (min-width: 640px) 42vw, 84vw";
+  return (
+    <div className="relative">
+      <Image src={`${SHOT}/parte-caso.webp`} alt="" width={w} height={h} sizes={sizes} className="block h-auto w-full" />
+      <div className="lt-case-closed">
+        <Image src={`${SHOT}/parte-caso-fechado.webp`} alt="" width={1400} height={643} sizes={sizes} className="block h-auto w-full" />
+      </div>
+      <span className="lt-tap" aria-hidden />
+    </div>
+  );
+}
+
+export function TemaPartLaptop({ part, label }: { part: TemaPart; label: string }) {
+  return (
+    <Laptop label={label} className="lt--sm">
+      {part === "prancha" ? (
+        <div className="lt-tour">
+          <Image src="/content/visual-v2/biosseguranca/biosseguranca-cinco-momentos-ilustrado.svg" alt="" width={1536} height={1024} unoptimized className="block h-auto w-full" />
         </div>
-      </Device>
-      <span className="xp-part float-a right-0 top-8 rounded-full bg-[var(--lp-hl)] px-3 py-1.5 text-xs font-extrabold text-white rotate-6">↻ 1 questão pendente</span>
-      <div className="xp-part float-b left-0 bottom-8 w-36 rounded-xl bg-white p-2.5 text-left -rotate-3">
-        <p className="text-[9px] font-bold uppercase tracking-wide text-[var(--lp-body)]">Errou?</p>
-        <p className="text-[11px] font-semibold leading-snug">O tema volta para a sua fila sozinho</p>
-      </div>
-    </div>
+      ) : part === "numeros" ? (
+        <NumbersShot />
+      ) : part === "caso" ? (
+        <CaseShot />
+      ) : (
+        <PanShot part={part} />
+      )}
+    </Laptop>
   );
 }
 

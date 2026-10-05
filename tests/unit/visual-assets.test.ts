@@ -5,6 +5,7 @@ import test from "node:test";
 import { CATEGORIES } from "../../src/vertical/content";
 import { VISUAL_ASSETS } from "../../src/vertical/content/visual-assets";
 import { categoryEmblemPath } from "../../src/components/ui/CategoryEmblem";
+import { offer } from "../../src/vertical/offer";
 
 const publishedTopics = CATEGORIES.flatMap((category) =>
   category.topics
@@ -96,5 +97,23 @@ test("a nova identidade visual possui símbolo e assinatura horizontal", () => {
     "/interface/brand/revisao-tecnico-horizontal.svg",
   ]) {
     assert.ok(existsSync(publicFile(brandAsset)), `arquivo de marca ausente: ${brandAsset}`);
+  }
+});
+
+test("a oferta possui mockup principal e um mockup para cada bônus", () => {
+  for (const heroAsset of [
+    "/landing/mockups/oferta-completa-frontal.png",
+    "/landing/mockups/oferta-completa-frontal.webp",
+    "/landing/mockups/oferta-completa-frontal-square.png",
+    "/landing/mockups/oferta-completa-frontal-square.webp",
+  ]) {
+    assert.ok(existsSync(publicFile(heroAsset)), `mockup principal ausente: ${heroAsset}`);
+  }
+
+  assert.equal(offer.bonuses.length, 3);
+  for (const bonus of offer.bonuses) {
+    assert.match(bonus.mockupSrc, /^\/landing\/mockups\/.+\.webp$/);
+    assert.ok(existsSync(publicFile(bonus.mockupSrc)), `${bonus.title}: mockup ausente`);
+    assert.ok(bonus.mockupAlt.length > 20, `${bonus.title}: texto alternativo insuficiente`);
   }
 });

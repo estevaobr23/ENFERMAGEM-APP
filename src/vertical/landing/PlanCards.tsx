@@ -1,9 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { offer } from "@/vertical/offer";
 import { goToCheckout } from "./CheckoutButton";
-import { Device, Print } from "./Device";
 
 const brl = (cents: number) => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(cents / 100);
 
@@ -15,17 +15,16 @@ function Check({ ok }: { ok: boolean }) {
   );
 }
 
-function PlanPhones({ small = false }: { small?: boolean }) {
-  const w = small ? "6.4rem" : "8.6rem";
+function CompleteOfferMockup({ small = false }: { small?: boolean }) {
   return (
-    <>
-      <Device width={w} label="Painel do aplicativo no celular">
-        <Print src="/landing/app/m-dash.webp" alt="" />
-      </Device>
-      <Device width={w} label="Matérias do aplicativo no celular">
-        <Print src="/landing/app/m-cats.webp" alt="" />
-      </Device>
-    </>
+    <Image
+      src={small ? "/landing/mockups/oferta-completa-frontal-square.webp" : "/landing/mockups/oferta-completa-frontal.webp"}
+      alt=""
+      width={small ? 1200 : 1800}
+      height={small ? 1200 : 1350}
+      sizes={small ? "(max-width: 480px) 90vw, 28rem" : "(max-width: 768px) 92vw, 38rem"}
+      className={`plan-complete-mockup h-auto w-full ${small ? "plan-complete-mockup--small" : ""}`}
+    />
   );
 }
 
@@ -38,7 +37,7 @@ export function PlanCards() {
   const [open, setOpen] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null);
   const [entry, pro] = offer.plans;
-  const { downsell } = offer;
+  const { downsell, bonuses } = offer;
   const proExtras = pro.includes.filter((t) => !entry.includes.includes(t));
   const proShared = pro.includes.filter((t) => entry.includes.includes(t));
 
@@ -62,13 +61,23 @@ export function PlanCards() {
               <p className="mt-2 text-sm font-semibold">pagamento único · <b className="text-[#06a742]">sem mensalidade</b></p>
             </div>
           </div>
-          <div className="plan-complete-visual" aria-hidden><PlanPhones /></div>
+          <div className="plan-complete-visual" aria-hidden><CompleteOfferMockup /></div>
           <p className="mb-3 mt-7 text-left text-xs font-extrabold uppercase tracking-[.15em] text-[var(--lp-hl-deep)]">O que está incluso:</p>
           <ul className="space-y-2.5 text-left">
             {[...proShared, ...proExtras].map((t) => (
               <li key={t} className="flex items-start gap-2.5 text-[15px] leading-snug"><Check ok />{t}</li>
             ))}
           </ul>
+          {bonuses.length > 0 && (
+            <>
+              <p className="mb-3 mt-6 text-left text-xs font-extrabold uppercase tracking-[.15em] text-[var(--lp-hl-deep)]">+ Bônus inclusos:</p>
+              <ul className="space-y-2.5 text-left">
+                {bonuses.map((b) => (
+                  <li key={b.title} className="flex items-start gap-2.5 text-[15px] leading-snug"><Check ok />{b.title}</li>
+                ))}
+              </ul>
+            </>
+          )}
           <a
             href={pro.checkoutUrl}
             data-checkout="vip"
@@ -93,6 +102,7 @@ export function PlanCards() {
           </ul>
           <ul className="mt-4 space-y-2.5 border-t border-white/15 pt-4 text-sm text-white/60">
             {proExtras.map((t) => <li key={t} className="flex items-start gap-2.5"><Check ok={false} />{t}</li>)}
+            {bonuses.map((b) => <li key={b.title} className="flex items-start gap-2.5"><Check ok={false} />{b.title}</li>)}
           </ul>
           <button type="button" onClick={() => setOpen(true)} className="mt-7 flex min-h-12 w-full items-center justify-center rounded-2xl border-2 border-white/50 px-5 py-3 text-center text-sm font-bold text-white transition hover:bg-white/10">
             COMEÇAR COM O BÁSICO
@@ -104,9 +114,13 @@ export function PlanCards() {
         <div className="relative p-6 text-center sm:p-8">
           <button type="button" onClick={() => setOpen(false)} aria-label="Fechar" className="absolute right-4 top-3 text-3xl leading-none text-[var(--lp-body)]">×</button>
           <p className="text-xs font-extrabold uppercase tracking-[.14em] text-[var(--lp-hl-deep)]">Espere! Uma oferta só pra você</p>
-          <h3 className="mt-2 text-2xl leading-tight">Leve o {pro.name} por menos que o Básico</h3>
+          <h3 className="mt-2 text-2xl leading-tight">
+            {downsell.priceCents < entry.priceCents
+              ? <>Leve o {pro.name} por menos que o Básico</>
+              : <>Leve o {pro.name} por só {brl(downsell.priceCents - entry.priceCents)} a mais</>}
+          </h3>
           <p className="mt-2 text-sm leading-relaxed text-[var(--lp-body)]">Questões comentadas, fila “Revisar novamente”, progresso por área e busca imediata — o aplicativo completo, por um preço especial.</p>
-          <div className="plan-complete-visual !min-h-0 !py-4" aria-hidden><PlanPhones small /></div>
+          <div className="plan-complete-visual !min-h-0 !py-3" aria-hidden><CompleteOfferMockup small /></div>
           <p className="mt-4 text-4xl font-extrabold tracking-[-.02em] text-[#06a742]"><s className="mr-2 text-lg font-bold text-[hsl(348,76%,46%)]">{brl(pro.priceCents)}</s>{brl(downsell.priceCents)}</p>
           <a
             href={downsell.checkoutUrl}
